@@ -651,6 +651,28 @@ html, body {
    background: $(brand.color);
    color: $(brand.font);
 }
+/* 個別記事ラベル：カテゴリ */
+.single-header-category-item {
+   display: block;
+   margin-top: .1em;
+   margin-left: .1em;
+   margin-right: .1em;
+   padding: .3em 1em;
+   border-radius: 2px;
+   background: $(brand.color);
+   color: $(brand.font);
+}
+/* 個別記事ラベル：ハッシュタグ（#付き） */
+.single-header-tag-item {
+   display: block;
+   margin-top: .1em;
+   margin-left: .1em;
+   padding: .3em 1em;
+   border-radius: 2px;
+   background: transparent;
+   color: $(brand.font);
+   border: 1px solid $(brand.font);
+}
 .list-item-img {
    display: block;
    width: 100%;
@@ -1198,6 +1220,13 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
       font-size: 1.9rem;
    }
 }
+
+/* ハッシュタグ */
+.single-header-tag-item
+ {
+    color: $(brand.color);
+    border: 1px solid $(brand.color);
+}
 /****************************************
         サイドバー
 *****************************************/
@@ -1320,6 +1349,26 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
 }
 #PopularPosts1 {
    display: none !important;
+}
+
+/* Label Widget Custom Design */
+.list-label-widget-content ul li a {
+    display: inline-block;
+    padding: 5px 12px;
+    margin: 4px;
+    text-decoration: none;
+    border: 1px solid $(brand.color);
+    /* フォント：紺色 */
+    color: $(brand.color);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+	font-size:13px;
+}
+
+#sub-content .list-label-widget-content ul li a:hover {
+    background-color: $(brand.color);
+	color: #ffffff !important;
+    text-decoration: none;
 }
 /****************************************
         フッター
@@ -1732,7 +1781,14 @@ input.gsc-input {
                 <b:if cond='data:post.labels'>
                   <p id='single-header-category'>
                     <b:loop values='data:post.labels' var='label'>
-                      <a class='single-header-category-item' expr:href='data:label.url'><data:label.name/></a>
+                      <b:if cond='data:label.name not contains &quot;#&quot;'>
+                        <a class='single-header-category-item' expr:href='data:label.url'><data:label.name/></a>
+                      </b:if>
+                    </b:loop>
+                    <b:loop values='data:post.labels' var='label'>
+                      <b:if cond='data:label.name contains &quot;#&quot;'>
+                        <a class='single-header-tag-item' expr:href='data:label.url'><data:label.name/></a>
+                      </b:if>
                     </b:loop>
                   </p>
                 </b:if>
@@ -2476,7 +2532,9 @@ input.gsc-input {
 
       <p class='list-item-category'>
         <b:loop values='data:post.labels' var='label'>
-          <span class='list-item-category-item'><a expr:href='data:label.url'><data:label.name/></a></span>
+          <b:if cond='data:label.name not contains &quot;#&quot;'>
+            <span class='list-item-category-item'><a expr:href='data:label.url'><data:label.name/></a></span>
+          </b:if>
         </b:loop>
       </p>
     </div>
@@ -3191,6 +3249,52 @@ input.gsc-input {
         <b:includable id='main'>
   <b:if cond='data:title != &quot;&quot;'>
     <h2><i class='fa-solid fa-tag'/> <data:title/></h2>
+  </b:if>
+  <div expr:class='&quot;widget-content &quot; + data:display + &quot;-label-widget-content&quot;'>
+    <b:if cond='data:display == &quot;list&quot;'>
+      <ul>
+        <b:loop values='data:labels' var='label'>
+          <li>
+            <b:if cond='data:blog.url == data:label.url'>
+              <span expr:dir='data:blog.languageDirection'><data:label.name/></span>
+            <b:else/>
+              <a expr:dir='data:blog.languageDirection' expr:href='data:label.url'><data:label.name/></a>
+            </b:if>
+            <b:if cond='data:showFreqNumbers'>
+              <span dir='ltr'>(<data:label.count/>)</span>
+            </b:if>
+          </li>
+        </b:loop>
+      </ul>
+    <b:else/>
+      <b:loop values='data:labels' var='label'>
+        <span expr:class='&quot;label-size label-size-&quot; + data:label.cssSize'>
+          <b:if cond='data:blog.url == data:label.url'>
+            <span expr:dir='data:blog.languageDirection'><data:label.name/></span>
+          <b:else/>
+            <a expr:dir='data:blog.languageDirection' expr:href='data:label.url'><data:label.name/></a>
+          </b:if>
+          <b:if cond='data:showFreqNumbers'>
+            <span class='label-count' dir='ltr'>(<data:label.count/>)</span>
+          </b:if>
+        </span>
+      </b:loop>
+    </b:if>
+    <b:include name='quickedit'/>
+  </div>
+</b:includable>
+      </b:widget>
+	  <b:widget id='Label2' locked='false' title='ハッシュタグ #付き' type='Label' version='1'>
+        <b:widget-settings>
+          <b:widget-setting name='sorting'>ALPHA</b:widget-setting>
+          <b:widget-setting name='display'>LIST</b:widget-setting>
+          <b:widget-setting name='selectedLabelsList'>#穴井夕子</b:widget-setting>
+          <b:widget-setting name='showType'>USER_SELECTED</b:widget-setting>
+          <b:widget-setting name='showFreqNumbers'>false</b:widget-setting>
+        </b:widget-settings>
+        <b:includable id='main'>
+  <b:if cond='data:title != &quot;&quot;'>
+    <h2><i class='fa-solid fa-tags'/> <data:title/></h2>
   </b:if>
   <div expr:class='&quot;widget-content &quot; + data:display + &quot;-label-widget-content&quot;'>
     <b:if cond='data:display == &quot;list&quot;'>
