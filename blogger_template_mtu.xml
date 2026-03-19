@@ -2834,7 +2834,7 @@ input.gsc-input {
         <div class="name">名前</div>
         <p class="description">ここに自己紹介文を入力</p>
         <div class="social-icons">
-            <a href="#" target="_blank"><a href="#" target="_blank"><i class="fa-brands fa-twitter"></i></a></a><a href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a><a href="#" target="_blank"><i class="fa-brands fa-tiktok"></i></a><a href="#" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#" target="_blank"><i class="fa-brands fa-twitter"></i></a></a><a href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a><a href="#" target="_blank"><i class="fa-brands fa-tiktok"></i></a><a href="#" target="_blank"><i class="fa-brands fa-youtube"></i></a>
         </div>
     </div>
 </div>]]></b:widget-setting>
