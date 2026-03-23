@@ -1777,7 +1777,7 @@ input.gsc-input {
               </b:if>
               <h1 id='single-header-title'><data:post.title/></h1>
               <b:if cond='data:blog.pageType  == &quot;item&quot;'>
-                <p id='single-header-date'><i class='fa-regular fa-clock'  style='margin-left:1.0em'/><data:post.dateHeader/>
+                <p id='single-header-date'><i class='fa-regular fa-clock'  style='margin-right:1.0em'/><data:post.dateHeader/>
 				<i aria-hidden='true' class='fa fa-refresh' style='margin-left:1.0em'/>
    				<span class='updated post-timestamp' expr:title='"Post was updated on " + data:post.lastUpdatedISO8601' id='last-modified' itemprop='dateModified' style='margin-left:5px;'>
    				<data:post.lastupdatedISO8601/><!-- 右側に表示される -->
