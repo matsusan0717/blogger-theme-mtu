@@ -1579,17 +1579,17 @@ input.gsc-input {
    margin-right: 10px;
 }
 .balloon-simple .icon-right img {
-   border: solid 4px #85e3ff;
+   border: solid 4px #5b92da;
 }
 .serif-right {
    margin: 10px 100px 0 0;
-   background: #85e3ff;
+   background: #5b92da;
    float: right;
 }
 .serif-right:after {
    transform: scale(-1, 1);
    right: -22px;
-   border-right: 20px solid #85e3ff;
+   border-right: 20px solid #5b92da;
 }
 .balloon-simple .icon-left {
    float: left;
