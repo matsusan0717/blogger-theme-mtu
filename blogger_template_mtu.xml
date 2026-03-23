@@ -1265,7 +1265,7 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
 /* 2. 内側の a タグに色と「適切な余白」を適用 */
 
 #sub-content .widget-content.cloud-label-widget-content .label-size a {
-   background: #0f2b46 !important;
+   background:  $(brand.color) !important;
    /* 背景：濃紺 */
    color: #e0eff5 !important;
    /* 文字：淡い水色 */
