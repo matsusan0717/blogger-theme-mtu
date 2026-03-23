@@ -1777,7 +1777,40 @@ input.gsc-input {
               </b:if>
               <h1 id='single-header-title'><data:post.title/></h1>
               <b:if cond='data:blog.pageType  == &quot;item&quot;'>
-                <p id='single-header-date'><data:post.dateHeader/></p>
+                <p id='single-header-date'><i class='fa-regular fa-clock'  style='margin-left:1.0em'/><data:post.dateHeader/>
+				<i aria-hidden='true' class='fa fa-refresh' style='margin-left:1.0em'/>
+   				<span class='updated post-timestamp' expr:title='"Post was updated on " + data:post.lastUpdatedISO8601' id='last-modified' itemprop='dateModified' style='margin-left:5px;'>
+   				<data:post.lastupdatedISO8601/><!-- 右側に表示される -->
+				</span>
+				<script>
+				// 投稿日
+				var published=new Date("<data:post.timestampISO8601/>");
+				// 最終更新日  
+				var updated =new Date("<data:post.lastUpdatedISO8601/>");
+				</script>
+				<script>
+				// <![CDATA[
+				// 投稿日
+				var pp_Y = ""+published.getFullYear();
+				var pp_M = ("0"+(published.getMonth()+1)).slice(-2);
+				var pp_D = ("0"+published.getDate()).slice(-2);
+				// 最終更新日 
+				var dd_Y = ""+updated.getFullYear();
+				var dd_M = ("0"+(updated.getMonth()+1)).slice(-2);
+				var dd_D = ("0"+updated.getDate()).slice(-2);
+ 
+				if(dd_Y == pp_Y && dd_M == pp_M && dd_D == pp_D){
+  			   //日付が同じときは出力しない
+				var updated_dd =""+ dd_Y+"/"+dd_M+"/"+dd_D+"";
+ 			    document.getElementById("last-modified").innerHTML = updated_dd;/*投稿日と更新日が同じでも双方表示させる---*/
+				}
+			   else{
+  			   var updated_dd =""+ dd_Y+"/"+dd_M+"/"+dd_D+"";
+   			   document.getElementById("last-modified").innerHTML = updated_dd;
+			   }
+			   //]]>
+			  </script>				
+			  </p>
                 <b:if cond='data:post.labels'>
                   <p id='single-header-category'>
                     <b:loop values='data:post.labels' var='label'>
