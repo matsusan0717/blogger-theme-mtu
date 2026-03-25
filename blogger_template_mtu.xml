@@ -1866,7 +1866,8 @@ input.gsc-input {
       .related-card-item img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
       .related-card-content { padding: 12px 15px; flex-grow: 1; }
       .related-card-date { font-size: 12px; color: #888888; margin-bottom: 5px; display: block; }
-      /* フォントの太さを 400 に修正 */
+      /* カレンダーアイコンの余白 */
+      .related-card-date i { margin-right: 5px; }
       .related-card-title { font-size: 15px; font-weight: 400; line-height: 1.5; color: #555555; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
       @media (max-width: 900px) { #related-posts-canvas { grid-template-columns: repeat(2, 1fr); } }
       @media (max-width: 600px) { #related-posts-canvas { grid-template-columns: 1fr; } }
@@ -1888,7 +1889,6 @@ input.gsc-input {
       function normalizeUrl(url) { return url.split(/[?#]/)[0].replace(/\/$/, ""); }
       const currentUrl = normalizeUrl(window.location.href);
 
-      // 【修正】ページ内の全リンクを走査してラベルを確実に取得する
       const allLinks = document.getElementsByTagName('a');
       const labelSet = new Set();
       for (let i = 0; i < allLinks.length; i++) {
@@ -1937,7 +1937,7 @@ input.gsc-input {
             ? entry.media$thumbnail.url.replace('s72-c', 'w640-h360-p') 
             : 'https://via.placeholder.com/640x360?text=No+Image';
 
-          html += `<a href="${link}" class="related-card-item"><div class="related-card-inner"><img src="${thumb}"><div class="related-card-content"><span class="related-card-date">${pub}</span><div class="related-card-title">${title}</div></div></div></a>`;
+          html += `<a href="${link}" class="related-card-item"><div class="related-card-inner"><img src="${thumb}"><div class="related-card-content"><span class="related-card-date"><i class="fa-regular fa-calendar"></i>${pub}</span><div class="related-card-title">${title}</div></div></div></a>`;
         });
         canvas.innerHTML = html;
       }
