@@ -1856,171 +1856,101 @@ input.gsc-input {
 <!-- 関連記事 -->
 
 <b:if cond='data:view.isSingleItem'>
-    <div class='post-outer'>
-      <b:if cond='data:view.isSingleItem'>
-        <style>
-          #custom-related-gadget-container {
-            margin: 40px 0;
-            border-top: 2px solid #555555;
-            padding-top: 30px;
-            clear: both;
-          }
-          
-          #related-posts-canvas {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-          }
- 
-          .related-card-item {
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s ease;
-          }
- 
-          .related-card-item:hover {
-            transform: translateY(-3px);
-          }
- 
-          .related-card-inner {
-            background: #ffffff;
-            border: 1px solid #dddddd;
-            border-radius: 4px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-          }
- 
-          .related-card-item img {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            object-fit: cover;
-            display: block;
-          }
- 
-          .related-card-content {
-            padding: 12px 15px;
-            flex-grow: 1;
-          }
- 
-          .related-card-date {
-            font-size: 12px;
-            color: #888888;
-            margin-bottom: 5px;
-            display: block;
-          }
- 
-          .related-card-title {
-            font-size: 15px; 
-            font-weight: 400; 
-            line-height: 1.5;
-            color: #555555;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
- 
-          @media (max-width: 900px) {
-            #related-posts-canvas { grid-template-columns: repeat(2, 1fr); }
-          }
-          @media (max-width: 600px) {
-            #related-posts-canvas { grid-template-columns: 1fr; }
-          }
-        </style>
- 
-        <div id='custom-related-gadget-container'>
-          <h3 style='font-size: 20px; font-weight: 900; color: #555555; margin-bottom: 25px; display: flex; align-items: center;'>
-            <span style='background: #2c3e50; color: #fff; padding: 2px 10px; margin-right: 10px; border-radius: 3px; font-size: 14px;'>NEXT</span> あわせて読みたい
-          </h3>
-          <div id='related-posts-canvas'>
-            <p id='related-loading' style='color: #999; font-size: 14px;'>探索中...</p>
-          </div>
-        </div>
- 
-        <script>
-        // <![CDATA[
-        (function() {
-          const canvas = document.getElementById('related-posts-canvas');
-          
-          function normalizeUrl(url) {
-            url = url.split(/[?#]/)[0];
-            url = url.replace(/\/$/, '');
-            return url;
-          }
-          
-          const currentUrl = normalizeUrl(window.location.href);
-          
-          const labelLinks = document.querySelectorAll('a[rel="tag"]');
-          const labels = Array.from(labelLinks).map(el => el.innerText.trim());
-          let labelIndex = 0;
- 
-          function fetchRelated(labelName) {
-            const feedPath = labelName ? `/-/${encodeURIComponent(labelName)}` : "";
-            const script = document.createElement('script');
-            script.src = `/feeds/posts/summary${feedPath}?alt=json-in-script&callback=processRelated&max-results=10`;
-            document.body.appendChild(script);
-          }
- 
-          window.processRelated = function(data) {
-            const entries = data.feed.entry || [];
-            
-            const filtered = entries.filter(e => {
-              const link = e.link.find(l => l.rel === 'alternate').href;
-              const linkNormalized = normalizeUrl(link);
-              return linkNormalized !== currentUrl;
-            });
- 
-            if (filtered.length > 0 || labelIndex >= labels.length) {
-              render(filtered);
-            } else {
-              labelIndex++;
-              fetchRelated(labels[labelIndex] || "");
-            }
-          };
- 
-          function render(posts) {
-            if (posts.length === 0) {
-              canvas.innerHTML = '<p style="color:#999; font-size:14px;">新しい記事を準備中</p>';
-              return;
-            }
- 
-            let html = '';
-            posts.slice(0, 6).forEach((entry) => {
-              const title = entry.title.$t;
-              const link = entry.link.find(l => l.rel === 'alternate').href;
-              const published = entry.published.$t;
-              const dateObj = new Date(published);
-              const dateStr = `${dateObj.getFullYear()}/${(dateObj.getMonth()+1).toString().padStart(2,'0')}/${dateObj.getDate().toString().padStart(2,'0')}`;
- 
-              const thumb = entry.media$thumbnail 
-                ? entry.media$thumbnail.url.replace('s72-c', 'w640-h360-p') 
-                : 'https://via.placeholder.com/640x360?text=No+Image';
- 
-              html += `
-                <a href="${link}" class="related-card-item" title="${title}">
-                  <div class="related-card-inner">
-                    <img src="${thumb}" alt="${title}" width="320" height="180" loading="lazy">
-                    <div class="related-card-content">
-                      <span class="related-card-date">${dateStr}</span>
-                      <div class="related-card-title">${title}</div>
-                    </div>
-                  </div>
-                </a>
-              `;
-            });
-            canvas.innerHTML = html;
-          }
- 
-          fetchRelated(labels[0] || "");
-        })();
-        // ]]>
-        </script>
-      </b:if>
+  <div class='post-outer'>
+    <style>
+      #custom-related-gadget-container { margin: 40px 0; border-top: 2px solid #555555; padding-top: 30px; clear: both; }
+      #related-posts-canvas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+      .related-card-item { text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: transform 0.2s ease; }
+      .related-card-item:hover { transform: translateY(-3px); }
+      .related-card-inner { background: #ffffff; border: 1px solid #dddddd; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; height: 100%; }
+      .related-card-item img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+      .related-card-content { padding: 12px 15px; flex-grow: 1; }
+      .related-card-date { font-size: 12px; color: #888888; margin-bottom: 5px; display: block; }
+      /* フォントの太さを 400 に修正 */
+      .related-card-title { font-size: 15px; font-weight: 400; line-height: 1.5; color: #555555; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+      @media (max-width: 900px) { #related-posts-canvas { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 600px) { #related-posts-canvas { grid-template-columns: 1fr; } }
+    </style>
+
+    <div id='custom-related-gadget-container'>
+      <h3 style='font-size: 20px; font-weight: 900; color: #555555; margin-bottom: 25px; display: flex; align-items: center;'>
+        <span style='background: #2c3e50; color: #fff; padding: 2px 10px; margin-right: 10px; border-radius: 3px; font-size: 14px;'>NEXT</span> あわせて読みたい
+      </h3>
+      <div id='related-posts-canvas'></div>
     </div>
+
+    <script type='text/javascript'>
+    // <![CDATA[
+    (function() {
+      const canvas = document.getElementById('related-posts-canvas');
+      const container = document.getElementById('custom-related-gadget-container');
+      
+      function normalizeUrl(url) { return url.split(/[?#]/)[0].replace(/\/$/, ""); }
+      const currentUrl = normalizeUrl(window.location.href);
+
+      // 【修正】ページ内の全リンクを走査してラベルを確実に取得する
+      const allLinks = document.getElementsByTagName('a');
+      const labelSet = new Set();
+      for (let i = 0; i < allLinks.length; i++) {
+        const href = allLinks[i].href;
+        if (href.indexOf('/search/label/') !== -1) {
+          const parts = href.split('/search/label/');
+          const labelName = decodeURIComponent(parts[1].split('?')[0].split('#')[0]);
+          if (labelName) labelSet.add(labelName);
+        }
+      }
+      const labels = Array.from(labelSet);
+
+      let labelIndex = 0;
+
+      function fetchRelated(labelName) {
+        if (!labelName) return;
+        const script = document.createElement('script');
+        script.src = "/feeds/posts/summary/-/" + encodeURIComponent(labelName) + "?alt=json-in-script&callback=processRelated&max-results=10";
+        document.body.appendChild(script);
+      }
+
+      window.processRelated = function(data) {
+        const entries = data.feed.entry || [];
+        const filtered = entries.filter(e => {
+          const link = e.link.find(l => l.rel === 'alternate').href;
+          return normalizeUrl(link) !== currentUrl;
+        });
+
+        if (filtered.length > 0) {
+          render(filtered);
+        } else if (labelIndex < labels.length - 1) {
+          labelIndex++;
+          fetchRelated(labels[labelIndex]);
+        } else {
+          container.style.display = 'none';
+        }
+      };
+
+      function render(posts) {
+        let html = '';
+        posts.slice(0, 6).forEach(entry => {
+          const title = entry.title.$t;
+          const link = entry.link.find(l => l.rel === 'alternate').href;
+          const pub = entry.published.$t.substring(0, 10).replace(/-/g, '/');
+          const thumb = entry.media$thumbnail 
+            ? entry.media$thumbnail.url.replace('s72-c', 'w640-h360-p') 
+            : 'https://via.placeholder.com/640x360?text=No+Image';
+
+          html += `<a href="${link}" class="related-card-item"><div class="related-card-inner"><img src="${thumb}"><div class="related-card-content"><span class="related-card-date">${pub}</span><div class="related-card-title">${title}</div></div></div></a>`;
+        });
+        canvas.innerHTML = html;
+      }
+
+      if (labels.length > 0) {
+        fetchRelated(labels[0]);
+      } else {
+        container.style.display = 'none';
+      }
+    })();
+    // ]]>
+    </script>
+  </div>
 </b:if>
 
               </b:if>
