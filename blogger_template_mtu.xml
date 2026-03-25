@@ -1626,11 +1626,11 @@ input.gsc-input {
 <div id='site-header-wrap'>
 <div id='header'>
     <b:section id='ヘッダー' maxwidgets='1' showaddelement='no'>
-      <b:widget id='Header1' locked='true' title='サイトタイトル (Header)' type='Header' version='1'>
+      <b:widget id='Header1' locked='true' title='Blogger template-test (Header)' type='Header' version='1'>
         <b:widget-settings>
           <b:widget-setting name='displayUrl'/>
           <b:widget-setting name='displayHeight'>0</b:widget-setting>
-          <b:widget-setting name='sectionWidth'>-1</b:widget-setting>
+          <b:widget-setting name='sectionWidth'>150</b:widget-setting>
           <b:widget-setting name='useImage'>false</b:widget-setting>
           <b:widget-setting name='shrinkToFit'>false</b:widget-setting>
           <b:widget-setting name='imagePlacement'>BEHIND</b:widget-setting>
@@ -1777,16 +1777,16 @@ input.gsc-input {
               </b:if>
               <h1 id='single-header-title'><data:post.title/></h1>
               <b:if cond='data:blog.pageType  == &quot;item&quot;'>
-                <p id='single-header-date'><i class='fa-regular fa-clock'  style='margin-right:1.0em'/><data:post.dateHeader/>
+                <p id='single-header-date'><i class='fa-regular fa-clock' style='margin-right:1.0em'/><data:post.dateHeader/>
 				<i aria-hidden='true' class='fa fa-refresh' style='margin-left:1.0em'/>
-   				<span class='updated post-timestamp' expr:title='"Post was updated on " + data:post.lastUpdatedISO8601' id='last-modified' itemprop='dateModified' style='margin-left:5px;'>
+   				<span class='updated post-timestamp' expr:title='&quot;Post was updated on &quot; + data:post.lastUpdatedISO8601' id='last-modified' itemprop='dateModified' style='margin-left:5px;'>
    				<data:post.lastupdatedISO8601/><!-- 右側に表示される -->
 				</span>
 				<script>
 				// 投稿日
-				var published=new Date("<data:post.timestampISO8601/>");
+				var published=new Date(&quot;<data:post.timestampISO8601/>&quot;);
 				// 最終更新日  
-				var updated =new Date("<data:post.lastUpdatedISO8601/>");
+				var updated =new Date(&quot;<data:post.lastUpdatedISO8601/>&quot;);
 				</script>
 				<script>
 				// <![CDATA[
@@ -1855,142 +1855,172 @@ input.gsc-input {
 
 <!-- 関連記事 -->
 
-<b:if cond='data:blog.pageType == &quot;item&quot;'>
-  <div id='related-posts'/>
-  <script type='text/javascript'>
-    const rp_current = &quot;<data:post.url/>&quot;;
-    const rp_max = 6; // 表示記事数
-    const rp_head = &quot;関連記事&quot;; // タイトル
-
-    //<![CDATA[
-    (function(root, func) {
-      if (!root.RelatedPosts) {
-        root.RelatedPosts = func();
-      }
-    })(this, function() {
-      let _this = function RelatedPosts_constructor() {};
-      let count = 0;
-      let limit = 0;
-      let urls = [];
-      let titles = [];
-      let dates = [];
-      let imgs = [];
-
-      // フィード数分をカウント
-      _this.counter = function RelatedPosts_counter() {
-        limit++;
-      };
-
-      // 関連記事の書き込み
-      function RelatedPosts_write() {
-        // 重複処理
-        let dups = [];
-        let indexs = [];
-        for (let i = 0; i < urls.length; i++) {
-          if (dups.indexOf(urls[i]) == -1) {
-            dups.push(urls[i]);
-            indexs.push(i);
+<b:if cond='data:view.isSingleItem'>
+    <div class='post-outer'>
+      <b:if cond='data:view.isSingleItem'>
+        <style>
+          #custom-related-gadget-container {
+            margin: 40px 0;
+            border-top: 2px solid #555555;
+            padding-top: 30px;
+            clear: both;
           }
-        }
-
-        // ランダムインデックス生成
-        let idx, items = [];
-        let a = [...Array(indexs.length).keys()];
-        while (a.length > 0) {
-          idx = Math.floor(Math.random() * a.length);
-          items.push(a[idx]);
-          a.splice(idx, 1);
-        }
-
-        // 関連一覧の作成
-        let html;
-        let i = 0;
-        if (indexs.length > 0) {
-          html = '<div class="related-text">' + rp_head + '</div><div class="p-container">';
-          while (i < indexs.length && i < rp_max) {
-            html += '<a href="' + urls[indexs[items[i]]] + '"><figure class="related-img"><img alt="" width="250" height="150" src="' + imgs[indexs[items[i]]] + '"/></figure><div class="related-date">' + dates[indexs[items[i]]] + '</div><div class="related-title">' + titles[indexs[items[i]]] + '</div></a>';
-            i++;
+          
+          #related-posts-canvas {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
           }
-          html += '</div>';
-          document.getElementById("related-posts").innerHTML = html;
-        }
-      }
-
-      // フィードデータ追加
-      _this.add = function RelatedPosts_add(json) {
-        let m = rp_current.match(/^https?:\/\/(.+$)/);
-        let http  = '';
-        let https = '';
-        if (m != null) {
-          http  = 'http://' + m[1];
-          https = 'https://' + m[1];
-        }
-        for (let i = 0; i < json.feed.entry.length; i++) {
-          let entry = json.feed.entry[i];
-          for (let j = 0; j < entry.link.length; j++) {
-            if (entry.link[j].rel == 'alternate') {
-              if (!(http == entry.link[j].href || https == entry.link[j].href)) {
-                urls.push(entry.link[j].href);
-                titles.push(entry.title.$t);
-                let date = entry.published.$t.substr(0, 10).replace(/-/g, "/");
-                dates.push(date);
-                let img;
-                if ("media$thumbnail" in entry) {
-                  img = entry.media$thumbnail.url;
-                  let re1 = /\/s72-.*\//;
-                  let re2 = /=s72-.*$/;
-                  if (img.match(re1)) {
-                    img = img.replace(re1, '/w250-h150-n/');
-                  } else if (img.match(re2)) {
-                    img = img.replace(re2, '=w250-h150-n');
-                  } else if (img.match(/default.jpg/)) {
-                    img = img.replace('default.jpg', 'mqdefault.jpg');
-                  }
-                } else {
-                  // NoImage画像
-                  img = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiJGufis0idCDqb29dBvyQCx5M5dHTE4bpc52w6WGtcdKpsQImJUUvWSFYn5k_IDsn1TjOhyfzw51TgvvabIrVAYjxasRmPjGTPdSKudZTYD6JA5DLW2rm-9fkahTfV4Cmn-GjsDaiCDnJ5/w250-h150-n-e365/noimg.jpg";
-                }
-                imgs.push(img);
-              }
-              break;
+ 
+          .related-card-item {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease;
+          }
+ 
+          .related-card-item:hover {
+            transform: translateY(-3px);
+          }
+ 
+          .related-card-inner {
+            background: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+          }
+ 
+          .related-card-item img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            display: block;
+          }
+ 
+          .related-card-content {
+            padding: 12px 15px;
+            flex-grow: 1;
+          }
+ 
+          .related-card-date {
+            font-size: 12px;
+            color: #888888;
+            margin-bottom: 5px;
+            display: block;
+          }
+ 
+          .related-card-title {
+            font-size: 15px; 
+            font-weight: 400; 
+            line-height: 1.5;
+            color: #555555;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+ 
+          @media (max-width: 900px) {
+            #related-posts-canvas { grid-template-columns: repeat(2, 1fr); }
+          }
+          @media (max-width: 600px) {
+            #related-posts-canvas { grid-template-columns: 1fr; }
+          }
+        </style>
+ 
+        <div id='custom-related-gadget-container'>
+          <h3 style='font-size: 20px; font-weight: 900; color: #555555; margin-bottom: 25px; display: flex; align-items: center;'>
+            <span style='background: #2c3e50; color: #fff; padding: 2px 10px; margin-right: 10px; border-radius: 3px; font-size: 14px;'>NEXT</span> あわせて読みたい
+          </h3>
+          <div id='related-posts-canvas'>
+            <p id='related-loading' style='color: #999; font-size: 14px;'>探索中...</p>
+          </div>
+        </div>
+ 
+        <script>
+        // <![CDATA[
+        (function() {
+          const canvas = document.getElementById('related-posts-canvas');
+          
+          function normalizeUrl(url) {
+            url = url.split(/[?#]/)[0];
+            url = url.replace(/\/$/, '');
+            return url;
+          }
+          
+          const currentUrl = normalizeUrl(window.location.href);
+          
+          const labelLinks = document.querySelectorAll('a[rel="tag"]');
+          const labels = Array.from(labelLinks).map(el => el.innerText.trim());
+          let labelIndex = 0;
+ 
+          function fetchRelated(labelName) {
+            const feedPath = labelName ? `/-/${encodeURIComponent(labelName)}` : "";
+            const script = document.createElement('script');
+            script.src = `/feeds/posts/summary${feedPath}?alt=json-in-script&callback=processRelated&max-results=10`;
+            document.body.appendChild(script);
+          }
+ 
+          window.processRelated = function(data) {
+            const entries = data.feed.entry || [];
+            
+            const filtered = entries.filter(e => {
+              const link = e.link.find(l => l.rel === 'alternate').href;
+              const linkNormalized = normalizeUrl(link);
+              return linkNormalized !== currentUrl;
+            });
+ 
+            if (filtered.length > 0 || labelIndex >= labels.length) {
+              render(filtered);
+            } else {
+              labelIndex++;
+              fetchRelated(labels[labelIndex] || "");
             }
+          };
+ 
+          function render(posts) {
+            if (posts.length === 0) {
+              canvas.innerHTML = '<p style="color:#999; font-size:14px;">新しい記事を準備中</p>';
+              return;
+            }
+ 
+            let html = '';
+            posts.slice(0, 6).forEach((entry) => {
+              const title = entry.title.$t;
+              const link = entry.link.find(l => l.rel === 'alternate').href;
+              const published = entry.published.$t;
+              const dateObj = new Date(published);
+              const dateStr = `${dateObj.getFullYear()}/${(dateObj.getMonth()+1).toString().padStart(2,'0')}/${dateObj.getDate().toString().padStart(2,'0')}`;
+ 
+              const thumb = entry.media$thumbnail 
+                ? entry.media$thumbnail.url.replace('s72-c', 'w640-h360-p') 
+                : 'https://via.placeholder.com/640x360?text=No+Image';
+ 
+              html += `
+                <a href="${link}" class="related-card-item" title="${title}">
+                  <div class="related-card-inner">
+                    <img src="${thumb}" alt="${title}" width="320" height="180" loading="lazy">
+                    <div class="related-card-content">
+                      <span class="related-card-date">${dateStr}</span>
+                      <div class="related-card-title">${title}</div>
+                    </div>
+                  </div>
+                </a>
+              `;
+            });
+            canvas.innerHTML = html;
           }
-        }
-        count++;
-        if (count == limit) {
-          RelatedPosts_write();
-        }
-      };
-
-      return _this;
-    });
-    //]]>
-  </script>
-  <b:loop values='data:post.labels' var='label'>
-    <script type='text/javascript'>RelatedPosts.counter();</script>
-  </b:loop>
-  <b:loop values='data:post.labels' var='label'>
-    <b:if cond='data:label.name contains &quot;#&quot; or data:label.name contains &quot;/&quot;'>
-      <script>
-      (function() {
-        let encoded = &quot;<data:label.name/>&quot;
-        const keys = [/&#12539;/g, /&amp;amp;/g, /#/g, /\//g];
-        const reps = [&quot;%E3%83%BB&quot;, &quot;&amp;&quot;, &quot;%23&quot;, &quot;%2F&quot;];
-        for (let i = 0; i &lt; keys.length; i++) {
-          encoded = encoded.replace(keys[i], reps[i]);
-        }      
-        const src = &quot;/feeds/posts/summary/-/&quot; + encoded + &quot;?alt=json&amp;max-results=10&amp;callback=RelatedPosts.add&quot;;
-        const js = document.createElement(&quot;script&quot;);
-        js.type = &quot;text/javascript&quot;;
-        js.defer = true;
-        js.src = src;
-        document.head.appendChild(js);
-      }());
-      </script>
-    <b:else/>
-      <script defer='defer' expr:src='&quot;/feeds/posts/summary/-/&quot; + data:label.name + &quot;?alt=json&amp;max-results=10&amp;callback=RelatedPosts.add&quot;' type='text/javascript'/>
-    </b:if>
-  </b:loop>
+ 
+          fetchRelated(labels[0] || "");
+        })();
+        // ]]>
+        </script>
+      </b:if>
+    </div>
 </b:if>
 
               </b:if>
@@ -2545,7 +2575,7 @@ input.gsc-input {
     <b:if cond='data:post.dateHeader'>
       <script type='text/javascript'>
         var rawDate = &quot;<data:post.dateHeader/>&quot;;
-        var jsdate = rawDate.split('(')[0].trim(); // 「(月)」などの曜日部分を切り捨て
+        var jsdate = rawDate.split(&#39;(&#39;)[0].trim(); // &#12300;(月)&#12301;などの曜日部分を切り捨て
       </script>
     </b:if>
     <b:if cond='data:post.thumbnailUrl'>
@@ -2847,7 +2877,7 @@ input.gsc-input {
    </div>
    <div id='sub-content'>
     <b:section id='サイドバー'>
-      <b:widget id='HTML1' locked='false' title='' type='HTML'>
+      <b:widget id='HTML1' locked='false' title='文字のデフォルト大文字サイズの変更' type='HTML' version='1'>
         <b:widget-settings>
           <b:widget-setting name='content'><![CDATA[<style>
 #matsu-profile-container { display:flex; justify-content:center; font-family:sans-serif; }
@@ -2862,12 +2892,12 @@ input.gsc-input {
 </style><div id="matsu-profile-container">
     <div class="profile-card">
         <div class="cover-area">
-            <img class="avatar-img" src="https://placehold.jp/120x120.png?text=Avatar" /* ★アバター画像URLをここに設定してください */ />
+            <img class="avatar-img" src="https://placehold.jp/120x120.png?text=Avatar" /* ★アバター画像urlをここに設定してください */ />
         </div>
         <div class="name">名前</div>
         <p class="description">ここに自己紹介文を入力</p>
         <div class="social-icons">
-            <a href="#" target="_blank"><i class="fa-brands fa-twitter"></i></a></a><a href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a><a href="#" target="_blank"><i class="fa-brands fa-tiktok"></i></a><a href="#" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#" target="_blank"><i class="fa-brands fa-twitter"></i></a><a href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a><a href="#" target="_blank"><i class="fa-brands fa-tiktok"></i></a><a href="#" target="_blank"><i class="fa-brands fa-youtube"></i></a>
         </div>
     </div>
 </div>]]></b:widget-setting>
@@ -3275,7 +3305,7 @@ input.gsc-input {
         <b:widget-settings>
           <b:widget-setting name='sorting'>FREQUENCY</b:widget-setting>
           <b:widget-setting name='display'>CLOUD</b:widget-setting>
-          <b:widget-setting name='selectedLabelsList'/>
+          <b:widget-setting name='selectedLabelsList'>ESSAY,エッセイ,ガジェット,ゲーム,東京パフォーマンスドール</b:widget-setting>
           <b:widget-setting name='showType'>ALL</b:widget-setting>
           <b:widget-setting name='showFreqNumbers'>false</b:widget-setting>
         </b:widget-settings>
@@ -3317,7 +3347,7 @@ input.gsc-input {
   </div>
 </b:includable>
       </b:widget>
-	  <b:widget id='Label2' locked='false' title='ハッシュタグ #付き' type='Label' version='1'>
+      <b:widget id='Label2' locked='false' title='ハッシュタグ #付き' type='Label' version='1'>
         <b:widget-settings>
           <b:widget-setting name='sorting'>ALPHA</b:widget-setting>
           <b:widget-setting name='display'>LIST</b:widget-setting>
@@ -3637,8 +3667,8 @@ input.gsc-input {
     </div>
     
           <p id='copyright'><data:blog.title/></p>
-  <p id='designed-by'><a href='http://qooq.dododori.com' style='color:#999999' target='_blank'>© QooQ</a></p>
-  <p id='customize-by'><a href='https://blogger.matsusanjpn.com' style='color:#999999' target='_blank'>© matsusan</a></p>
+  <p id='designed-by'><a href='http://qooq.dododori.com' style='color:#999999' target='_blank'>&#169; QooQ</a></p>
+  <p id='customize-by'><a href='https://blogger.matsusanjpn.com' style='color:#999999' target='_blank'>&#169; matsusan</a></p>
     
   </div>
  </div>
