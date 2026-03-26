@@ -889,11 +889,11 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
    border-bottom: solid 2px $(brand.color);
 }
 #single-content h4 {
-   display: inline-block;
-   font-weight: bold;
-   border-left: solid 3px #0f2b46;
-   margin: 0 auto 50px;
-   padding: 5px 0 5px 5px;
+  font-size: 1.6rem;
+  border-left: 8px solid $(brand.color);
+  padding-left: 12px;
+  margin-bottom: 20px;
+  background: #fafafa;
 }
 #single-content blockquote {
    position: relative;
