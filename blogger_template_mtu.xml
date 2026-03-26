@@ -893,7 +893,6 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
   border-left: 8px solid $(brand.color);
   padding-left: 12px;
   margin-bottom: 20px;
-  background: #fafafa;
 }
 #single-content blockquote {
    position: relative;
