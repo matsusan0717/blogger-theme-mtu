@@ -1530,6 +1530,26 @@ input.gsc-input {
    pointer-events: none;
 }
 
+/* ページナビゲーション全体のコンテナ */
+#blog-pager {
+  display: flex !important;
+  width: 100% !important;
+  justify-content: flex-end !important; /* 基本を右寄せにする */
+  padding: 10px 0;
+  clear: both;
+}
+
+/* もし「新しい投稿(newer)」が存在する場合のみ、左右に振り分ける */
+#blog-pager:has(.blog-pager-newer-link) {
+  justify-content: space-between !important;
+}
+
+/* 念のため、古い投稿リンク自体のフロートを解除 */
+.blog-pager-older-link {
+  float: none !important;
+  display: inline-block !important;
+}	
+
 /****************************************
         吹き出しショートコード
 *****************************************/
