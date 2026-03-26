@@ -1877,7 +1877,7 @@ input.gsc-input {
 <b:if cond='data:view.isSingleItem'>
   <div class='post-outer'>
     <style>
-      #custom-related-gadget-container { margin: 40px 0; border-top: 2px solid #555555; padding-top: 30px; clear: both; }
+      #custom-related-gadget-container { margin: 0; clear: both; }
       #related-posts-canvas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
       .related-card-item { text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: transform 0.2s ease; }
       .related-card-item:hover { transform: translateY(-3px); }
