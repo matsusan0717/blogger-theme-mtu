@@ -686,7 +686,7 @@ html {
 .list-item-category-item {
    display: block;
    margin-top: .1em;
-   margin-left: .1em;
+   margin-left: .5em;
    padding: .3em 1em;
    border-radius: 2px;
    background: $(brand.color);
