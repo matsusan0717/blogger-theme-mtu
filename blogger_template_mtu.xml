@@ -1446,6 +1446,30 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
 	font-size:13px;
 }
 
+.widget li, .BlogArchive #ArchiveList ul.flat li {
+    padding:0;
+}
+
+.list-label-widget-content ul {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.list-label-widget-content li {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.list-label-widget-content li a {
+  display: inline-block;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
+
 #sub-content .list-label-widget-content ul li a:hover {
     background-color: $(brand.color);
 	color: #ffffff !important;
@@ -3230,13 +3254,6 @@ input.gsc-input {
 </b:includable>
       </b:widget>
       <b:widget id='Label1' locked='false' title='ラベル' type='Label' version='1'>
-        <b:widget-settings>
-          <b:widget-setting name='sorting'>FREQUENCY</b:widget-setting>
-          <b:widget-setting name='display'>CLOUD</b:widget-setting>
-          <b:widget-setting name='selectedLabelsList'>ESSAY,エッセイ,ガジェット,ゲーム,東京パフォーマンスドール</b:widget-setting>
-          <b:widget-setting name='showType'>USER_SELECTED</b:widget-setting>
-          <b:widget-setting name='showFreqNumbers'>false</b:widget-setting>
-        </b:widget-settings>
         <b:includable id='main'>
   <b:if cond='data:title != &quot;&quot;'>
     <h2><i class='fa-solid fa-tag'/> <data:title/></h2>
@@ -3276,13 +3293,6 @@ input.gsc-input {
 </b:includable>
       </b:widget>
       <b:widget id='Label2' locked='false' title='ハッシュタグ #付き' type='Label' version='1'>
-        <b:widget-settings>
-          <b:widget-setting name='sorting'>ALPHA</b:widget-setting>
-          <b:widget-setting name='display'>LIST</b:widget-setting>
-          <b:widget-setting name='selectedLabelsList'>#穴井夕子</b:widget-setting>
-          <b:widget-setting name='showType'>USER_SELECTED</b:widget-setting>
-          <b:widget-setting name='showFreqNumbers'>false</b:widget-setting>
-        </b:widget-settings>
         <b:includable id='main'>
   <b:if cond='data:title != &quot;&quot;'>
     <h2><i class='fa-solid fa-tags'/> <data:title/></h2>
