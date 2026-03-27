@@ -1968,7 +1968,7 @@ input.gsc-input {
                   <p id='single-header-category'>
                     <b:loop values='data:post.labels' var='label'>
                       <b:if cond='data:label.name not contains &quot;#&quot;'>
-                        <a class='single-header-category-item' expr:href='data:label.url'><data:label.name/></a>
+                        <a class='single-header-category-item' expr:href='data:label.url'><i class='fa-solid fa-tag' style='margin-right:5px;'/><data:label.name/></a>
                       </b:if>
                     </b:loop>
                     <b:loop values='data:post.labels' var='label'>
@@ -2679,7 +2679,7 @@ input.gsc-input {
       <p class='list-item-category'>
         <b:loop values='data:post.labels' var='label'>
           <b:if cond='data:label.name not contains &quot;#&quot;'>
-            <span class='list-item-category-item'><a expr:href='data:label.url'><data:label.name/></a></span>
+            <span class='list-item-category-item'><i class='fa-solid fa-tag' style='margin-right:5px;'/><a expr:href='data:label.url'><data:label.name/></a></span>
           </b:if>
         </b:loop>
       </p>
