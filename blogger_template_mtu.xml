@@ -2868,321 +2868,133 @@ input.gsc-input {
     </div>
 
     <div class="tab-content">
-<!-- -人気記事 -->
       <div class="content1">
-
-<div class='widget-content popular-posts'>
-  <ul id='recent-as-popular-content'>
-    <div style="text-align:center; padding:20px;">読み込み中...</div>
-  </ul>
-</div>
-
-<style type='text/css'>
-/* 全体のリストスタイル初期化 */
-.popular-posts ul { list-style:none; margin:0; padding:0; }
-.popular-posts li { padding:10px 0; border-bottom:1px solid #eeeeee; list-style:none !important; clear: both; }
-.popular-posts li:last-child { border-bottom:none; }
-
-/* 1. サムネイルとタイトルの横並び設定 */
-.item-thumbnail-only { 
-  display: flex; 
-  align-items: flex-start; /* 上揃え */
-}
-
-/* 2. サムネイルコンテナ */
-.item-thumbnail { 
-  flex-shrink: 0; /* 画像が潰れないように設定 */
-  margin-right: 12px; 
-}
-
-/* 3. 【重要】画像サイズを正方形固定 */
-.item-thumbnail img { 
-  width: 72px !important;  /* 幅を72pxに固定 */
-  height: 72px !important; /* 高さを72pxに固定 */
-  object-fit: cover;        /* 重要：アスペクト比を保ったまま枠に収め、はみ出し分をトリミング */
-  object-position: center;  /* 中央を基準に切り抜き */
-  border-radius: 4px;       /* 角丸 */
-  border: 0; 
-  padding: 0;
-  display: block;
-}
-
-/* 4. タイトルエリア */
-.item-title { 
-  flex: 1; /* 残りの幅をすべて使う */
-  font-size: 14px; 
-  font-weight: 700; 
-  line-height: 1.4; 
-}
-
-/* リンクの設定 */
-.item-title a { color: #555555; text-decoration: none; transition: 0.2s; }
-.item-title a:hover { color: rgba(15, 43, 70, 0.7); }
-
-/* ヘルパークラス（念のため） */
-.clear { clear: both; }
-</style>
-
-<script type='text/javascript'>
-//<![CDATA[
-(function() {
-  const blogUrl = "https://your-blog.blogspot.com"; // ★ご自身のブログURLに変更してください
-  const maxResults = 10; // 表示件数
-  const container = document.getElementById('recent-as-popular-content');
-
-  // フィード受け取り用グローバル関数
-  window.renderAsPopular = function(json) {
-    if (!json.feed.entry) {
-      container.innerHTML = "記事が見つかりませんでした。";
-      return;
-    }
-
-    let html = "";
-    json.feed.entry.forEach(entry => {
-      let title = entry.title.$t;
-      let link = entry.link.find(l => l.rel === 'alternate').href;
-      
-      // サムネイル処理：Bloggerの標準縮小版（s72-c）を取得
-      let thumbUrl = "";
-      if (entry.media$thumbnail) {
-        // すでにs72-c（正方形キャッシュ）である可能性が高いが、念のため置換
-        thumbUrl = entry.media$thumbnail.url.replace(/\/s[0-9]+.*?\//, '/s72-c/');
-      } else {
-        // 画像がない場合のダミー（72x72）
-        thumbUrl = "https://placehold.jp/72x72.png?text=NoImage";
-      }
-
-      html += `
-        <li>
-          <div class="item-thumbnail-only">
-            <div class="item-thumbnail">
-              <a href="${link}" target="_blank">
-                <img alt="${title}" src="${thumbUrl}">
-              </a>
-            </div>
-            <div class="item-title">
-              <a href="${link}">${title}</a>
-            </div>
-          </div>
-          <div class="clear"></div>
-        </li>
-      `;
-    });
-
-    container.innerHTML = html;
-  };
-
-  // フィードの読み込み
-  const script = document.createElement('script');
-  script.src = `${blogUrl}/feeds/posts/default?alt=json-in-script&callback=renderAsPopular&max-results=${maxResults}`;
-  document.body.appendChild(script);
-})();
-//]]]]><![CDATA[>
-</script>
-
-</div>
-
-<!-- 新着記事 -->
-      <div class="content2">
-<div id='recent-posts-container'>
-  <div class='recent-posts-loading'>読み込み中...</div>
-</div>
-
-<style type='text/css'>
-/* 全体のスタイル（人気記事ウィジェットの整合性） */
-#recent-posts-container {
-  width: 100%;
-  font-family: sans-serif;
-}
-
-/* 各記事のアイテム */
-.recent-post-item {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eeeeee;
-}
-
-.recent-post-item:last-child {
-  border-bottom: none;
-}
-
-/* サムネイル（左側） */
-.recent-post-thumb {
-  width: 72px;  /* 人気記事の標準サイズ */
-  height: 72px;
-  object-fit: cover;
-  border-radius: 4px;
-  margin-right: 12px;
-  flex-shrink: 0;
-}
-
-/* タイトルエリア（右側） */
-.recent-post-info {
-  flex: 1;
-}
-
-.recent-post-title {
-  font-size: 14px;
-  font-weight: 700; /* 主の好みに合わせ太めに設定 */
-  line-height: 1.4;
-  margin: 0;
-}
-
-.recent-post-title a {
-  text-decoration: none;
-  color: #555555; /* 主の読みやすさ基準色 */
-  transition: color 0.2s;
-}
-
-/* ホバー時の色（先程の設定と整合） */
-.recent-post-title a:hover {
-  color: rgba(15, 43, 70, 0.7);
-}
-
-/* 読み込み中の表示 */
-.recent-posts-loading {
-  text-align: center;
-  font-size: 12px;
-  color: #999;
-}
-
-#recent-posts-container {
-    width: 100%;
-    font-family: sans-serif;
-    padding: 15px;
-}
-
-</style>
-
-<script type='text/javascript'>
-//<![CDATA[
-(function() {
-  const blogUrl = "https://your-blog.blogspot.com"; // ★ご自身のブログURLに変更してください
-  const maxResults = 5; // 表示したい記事数
-  const container = document.getElementById('recent-posts-container');
-
-  function getRecentPosts() {
-    // フィードURLを生成
-    const script = document.createElement('script');
-    script.src = `${blogUrl}/feeds/posts/default?alt=json-in-script&callback=renderRecentPosts&max-results=${maxResults}`;
-    document.body.appendChild(script);
-  }
-
-  // グローバル関数として定義してフィードを受け取る
-  window.renderRecentPosts = function(json) {
-    if (!json.feed.entry) {
-      container.innerHTML = "記事が見つかりませんでした。";
-      return;
-    }
-
-    let html = "";
-    json.feed.entry.forEach(entry => {
-      let title = entry.title.$t;
-      let link = "";
-      for (let i = 0; i < entry.link.length; i++) {
-        if (entry.link[i].rel === 'alternate') {
-          link = entry.link[i].href;
-          break;
-        }
-      }
-
-      // サムネイル画像の取得（なければダミー画像）
-      let thumbUrl = "";
-      if (entry.media$thumbnail) {
-        // 標準サイズ(72px)をより鮮明にするためリサイズ処理
-        thumbUrl = entry.media$thumbnail.url.replace('/s72-c/', '/s160-c/');
-      } else {
-        thumbUrl = "https://placehold.jp/160x160.png?text=No%20Image";
-      }
-
-      html += `
-        <div class="recent-post-item">
-          <a href="${link}">
-            <img class="recent-post-thumb" src="${thumbUrl}" alt="${title}">
-          </a>
-          <div class="recent-post-info">
-            <h3 class="recent-post-title">
-              <a href="${link}">${title}</a>
-            </h3>
-          </div>
+        <div class='widget-content popular-posts'>
+          <ul id='recent-as-popular-content'>
+            <div style="text-align:center; padding:20px;">読み込み中...</div>
+          </ul>
         </div>
-      `;
-    });
+      </div>
 
-    container.innerHTML = html;
-  };
-
-  getRecentPosts();
-})();
-//]]]]><![CDATA[>
-</script>
-
-</div>
+      <div class="content2">
+        <div id='recent-posts-container'>
+          <div class='recent-posts-loading'>読み込み中...</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<style>
-.lava-lamp-wrapper {
+<style type='text/css'>
+/* 1. レイアウトと余白の統一 */
+.popular-posts ul, #recent-posts-container { 
+  list-style: none; 
+  margin: 0; 
+  padding: 7.5px; /* 全体の内側余白を15pxで統一 */
+}
+
+/* 2. リストアイテムの縦並びを統一 */
+.popular-posts li, .recent-post-item { 
+  display: flex !important;
+  align-items: flex-start;
+  padding: 10px 0; 
+  border-bottom: 1px solid #eeeeee; 
+  list-style: none !important;
+  clear: both;
+}
+.popular-posts li:last-child, .recent-post-item:last-child { border-bottom: none; }
+
+/* 3. サムネイルのサイズと形状を統一 */
+.item-thumbnail img, .recent-post-thumb { 
+  width: 72px !important; 
+  height: 72px !important; 
+  object-fit: cover; 
+  border-radius: 4px; 
+  margin-right: 12px;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* 4. タイトルのスタイルを統一 */
+.item-title, .recent-post-info { flex: 1; }
+.item-title, .recent-post-title {
+  font-size: 14px; 
+  font-weight: 700; 
+  line-height: 1.4; 
   margin: 0;
 }
+.item-title a, .recent-post-title a { color: #555555; text-decoration: none; transition: 0.2s; }
+.item-title a:hover, .recent-post-title a:hover { color: rgba(15, 43, 70, 0.7); }
 
-.lava-lamp-wrapper .custom-tabs-container {
-  width: 100%;
-  margin: 0 auto;
-  position: relative;
-}
+/* --- タブのデザイン --- */
+.lava-lamp-wrapper .tab-buttons { display: flex; background: #eee; position: relative; border-bottom: 2px solid #ddd; }
+.lava-lamp-wrapper .tab-buttons span { flex: 1; font: 700 14px sans-serif; color: #555; cursor: pointer; text-align: center; height: 40px; line-height: 40px; z-index: 2; }
+.lava-lamp-wrapper .lamp { width: 50%; height: 2px; background: #333; position: absolute; bottom: -2px; left: 0; transition: all 0.3s ease-out; z-index: 3; }
+.lava-lamp-wrapper .tab-content > div { display: none; }
+.lava-lamp-wrapper .tab-content > div.content1 { display: block; }
+</style>
 
-.lava-lamp-wrapper .tab-buttons {
-  display: flex;
-  background: #eee;
-  position: relative;
-  border-bottom: 2px solid #ddd;
-}
+<script type='text/javascript'>
+//<![CDATA[
+(function() {
+  // タブ切り替えロジック
+  const btn1 = document.querySelector('.tab-buttons .content1');
+  const btn2 = document.querySelector('.tab-buttons .content2');
+  const pane1 = document.querySelector('.tab-content .content1');
+  const pane2 = document.querySelector('.tab-content .content2');
+  const lamp = document.querySelector('.lamp');
 
-.lava-lamp-wrapper .tab-buttons span {
-  flex: 1;
-  font: 700 14px sans-serif; /* 主の好みに合わせ太めに設定 */
-  color: #555;
-  cursor: pointer;
-  text-align: center;
-  height: 40px;
-  line-height: 40px;
-  z-index: 2;
-}
+  btn1.onclick = function() {
+    pane1.style.display = 'block';
+    pane2.style.display = 'none';
+    lamp.style.left = '0';
+  };
+  btn2.onclick = function() {
+    pane1.style.display = 'none';
+    pane2.style.display = 'block';
+    lamp.style.left = '50%';
+  };
 
-.lava-lamp-wrapper .lamp {
-  /* 幅はJSでボタンの数に合わせて自動計算するため初期値は0 */
-  width: 0; 
-  height: 2px;
-  background: #333;
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  transition: all 0.3s ease-out;
-  z-index: 3;
-}
+  // フィード取得ロジック
+  const blogUrl = "★あなたのブログURL";
+  const maxResults = 3;
 
-.lava-lamp-wrapper .tab-content {
-  border-top: none;
-  padding: 0px;
-  font-size: 14px;
-  color: #555;
-  min-height: 80px;
-  position: relative;
-  overflow: hidden;
-}
+  window.renderAsPopular = function(json) {
+    const container = document.getElementById('recent-as-popular-content');
+    if (!json.feed.entry) { container.innerHTML = "記事なし"; return; }
+    let html = "";
+    json.feed.entry.forEach(entry => {
+      let title = entry.title.$t;
+      let link = entry.link.find(l => l.rel === 'alternate').href;
+      let thumbUrl = entry.media$thumbnail ? entry.media$thumbnail.url.replace(/\/s[0-9]+.*?\//, '/s72-c/') : "https://placehold.jp/72x72.png?text=NoImage";
+      html += `<li><div class="item-thumbnail"><a href="${link}"><img src="${thumbUrl}"></a></div><div class="item-title"><a href="${link}">${title}</a></div></li>`;
+    });
+    container.innerHTML = html;
+  };
 
-.lava-lamp-wrapper .tab-content > div {
-  display: none;
-}
+  window.renderRecentPosts = function(json) {
+    const container = document.getElementById('recent-posts-container');
+    if (!json.feed.entry) { container.innerHTML = "記事なし"; return; }
+    let html = "";
+    json.feed.entry.forEach(entry => {
+      let title = entry.title.$t;
+      let link = entry.link.find(l => l.rel === 'alternate').href;
+      let thumbUrl = entry.media$thumbnail ? entry.media$thumbnail.url.replace(/\/s[0-9]+.*?\//, '/s72-c/') : "https://placehold.jp/72x72.png?text=NoImage";
+      html += `<div class="recent-post-item"><img class="recent-post-thumb" src="${thumbUrl}"><div class="recent-post-info"><h3 class="recent-post-title"><a href="${link}">${title}</a></h3></div></div>`;
+    });
+    container.innerHTML = html;
+  };
 
-.lava-lamp-wrapper .tab-content > div.content1 {
-  display: block;
-}
-</style>]]></b:widget-setting>
+  const s1 = document.createElement('script');
+  s1.src = `${blogUrl}/feeds/posts/default?alt=json-in-script&callback=renderAsPopular&max-results=${maxResults}`;
+  document.body.appendChild(s1);
+
+  const s2 = document.createElement('script');
+  s2.src = `${blogUrl}/feeds/posts/default?alt=json-in-script&callback=renderRecentPosts&max-results=${maxResults}`;
+  document.body.appendChild(s2);
+})();
+//]]]]><![CDATA[>
+</script>]]></b:widget-setting>
         </b:widget-settings>
         <b:includable id='main'>
   <!-- only display title if it's non-empty -->
