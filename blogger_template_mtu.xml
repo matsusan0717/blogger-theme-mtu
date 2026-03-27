@@ -3052,7 +3052,7 @@ input.gsc-input {
   };
 
   // フィード取得ロジック
-  const blogUrl = "★あなたのブログURL";
+  const blogUrl = "https://your-blog.blogspot.com";
   const maxResults = 3;
 
   window.renderAsPopular = function(json) {
