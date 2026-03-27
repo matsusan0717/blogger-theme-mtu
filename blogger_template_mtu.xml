@@ -1033,6 +1033,24 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
 .single-share-line {
    background: #06c755;
 }
+.single-share-copy {
+    background: #757575 !important;
+    cursor: pointer;
+}
+.single-share-copy::before {
+    content: "\f0c1" !important; /* チェーンのアイコン */
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    font-size: 18px;
+}
+
+.single-share-twitter::before,
+.single-share-facebook::before,
+.single-share-line::before {
+    font-family: "Font Awesome 5 Brands" !important;
+    font-weight: 400 !important;
+}
+
 /* 前後の記事 */
 
 /* ナビゲーション全体のコンテナ */
@@ -2346,7 +2364,7 @@ input.gsc-input {
     </div>
   </div>
 </b:includable>
-<b:includable id='mybreadcrumb' var='posts'>
+        <b:includable id='mybreadcrumb' var='posts'>
   <b:if cond='data:view.isItem or data:view.isLabelSearch'>
     
     <div class='breadcrumbs' itemscope='itemscope' itemtype='http://schema.org/BreadcrumbList'>
@@ -2556,13 +2574,46 @@ input.gsc-input {
   </b:if>
 </b:includable>
         <b:includable id='shareButtons' var='post'>
-<div class='single-share'>
-  <a class='single-share-twitter' expr:href='&quot;https://twitter.com/intent/tweet?url=&quot; + data:post.canonicalUrl + &quot;&amp;text=&quot; + data:post.title' target='_blank' title='ツイッターでつぶやく'>t</a>
-  <a class='single-share-facebook' expr:href='&quot;https://www.facebook.com/sharer/sharer.php?u=&quot; + data:post.canonicalUrl + &quot;&amp;t=&quot; + data:post.title' target='_blank' title='フェイスブックでシェア'>f</a>
-  <a class='single-share-hatena' expr:href='&quot;http://b.hatena.ne.jp/add?mode=confirm&amp;url=&quot; + data:post.canonicalUrl' title='はてなブックマークに追加'>B!</a>
-  <a class='single-share-pocket' expr:href='&quot;https://getpocket.com/edit?url=&quot; + data:post.canonicalUrl + &quot;&amp;title=&quot; + data:post.title' target='_blank' title='Pocketに保存'>P</a>
-  <a class='single-share-line' expr:href='&quot;https://social-plugins.line.me/lineit/share?url=&quot; + data:post.canonicalUrl' target='_blank' title='LINEで送る'>L</a>
-</div>
+  <div class='single-share'>
+    <a class='single-share-twitter' expr:href='&quot;https://twitter.com/intent/tweet?url=&quot; + data:post.canonicalUrl + &quot;&amp;text=&quot; + data:post.title' target='_blank' title='ツイッターでつぶやく'>t</a>
+    <a class='single-share-facebook' expr:href='&quot;https://www.facebook.com/sharer/sharer.php?u=&quot; + data:post.canonicalUrl + &quot;&amp;t=&quot; + data:post.title' target='_blank' title='フェイスブックでシェア'>f</a>
+    <a class='single-share-hatena' expr:href='&quot;http://b.hatena.ne.jp/add?mode=confirm&amp;url=&quot; + data:post.canonicalUrl' title='はてなブックマークに追加'>B!</a>
+    <a class='single-share-line' expr:href='&quot;https://social-plugins.line.me/lineit/share?url=&quot; + data:post.canonicalUrl' target='_blank' title='LINEで送る'>L</a>
+    <a class='single-share-copy' expr:data-url='data:post.canonicalUrl' href='javascript:void(0);' onclick='copyURL(this)' title='URLをコピー'>C</a>
+  </div>
+
+  <script type='text/javascript'>
+  //<![CDATA[
+    function copyURL(el) {
+      var url = el.getAttribute('data-url');
+      var successMsg = decodeURIComponent("%55%52%4C%E3%82%92%E3%82%B3%E3%83%94%E3%83%BC%E3%81%97%E3%81%BE%E3%81%97%E3%81%9F%EF%BC%81");
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function() {
+          alert(successMsg);
+        }).catch(function() {
+          fallbackCopy(url, successMsg);
+        });
+      } else {
+        fallbackCopy(url, successMsg);
+      }
+    }
+
+    function fallbackCopy(url, msg) {
+      var t = document.createElement('textarea');
+      t.value = url;
+      document.body.appendChild(t);
+      t.select();
+      try {
+        document.execCommand('copy');
+        alert(msg);
+      } catch (err) {
+        console.error('Copy fallback failed');
+      }
+      document.body.removeChild(t);
+    }
+  //]]>
+  </script>
 </b:includable>
         <b:includable id='status-message'>
   <b:if cond='data:navMessage'>
