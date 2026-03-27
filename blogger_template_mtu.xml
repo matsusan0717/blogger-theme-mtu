@@ -1478,7 +1478,7 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
 #BlogArchive1_ArchiveMenu{
 	width: 100%;
     padding: 5px;
-}	
+}
 /****************************************
         フッター
 *****************************************/
@@ -3296,7 +3296,7 @@ input.gsc-input {
   </div>
 </b:includable>
       </b:widget>
-      <b:widget id='Label2' locked='false' title='ハッシュタグ #付き' type='Label' version='1'>
+      <b:widget id='Label2' locked='false' title='ハッシュタグ' type='Label' version='1'>
         <b:includable id='main'>
   <b:if cond='data:title != &quot;&quot;'>
     <h2><i class='fa-solid fa-tags'/> <data:title/></h2>
@@ -3337,14 +3337,14 @@ input.gsc-input {
       </b:widget>
       <b:widget id='BlogArchive1' locked='false' title='ブログ アーカイブ' type='BlogArchive' version='1'>
         <b:widget-settings>
-          <b:widget-setting name='showStyle'>HIERARCHY</b:widget-setting>
+          <b:widget-setting name='showStyle'>MENU</b:widget-setting>
           <b:widget-setting name='yearPattern'>yyyy</b:widget-setting>
           <b:widget-setting name='showWeekEnd'>true</b:widget-setting>
-          <b:widget-setting name='monthPattern'>MMMM</b:widget-setting>
+          <b:widget-setting name='monthPattern'>MMMM yyyy</b:widget-setting>
           <b:widget-setting name='dayPattern'>MMM dd</b:widget-setting>
           <b:widget-setting name='weekPattern'>MM/dd</b:widget-setting>
           <b:widget-setting name='chronological'>false</b:widget-setting>
-          <b:widget-setting name='showPosts'>true</b:widget-setting>
+          <b:widget-setting name='showPosts'>false</b:widget-setting>
           <b:widget-setting name='frequency'>MONTHLY</b:widget-setting>
         </b:widget-settings>
         <b:includable id='main'>
@@ -3422,12 +3422,17 @@ input.gsc-input {
 </div>
 
 <style type="text/css">
-/* 目次全体のコンテナ */
-.toc-widget-container {
-    visibility: hidden; /* 描画完了まで隠す */
+/* 1. 初期状態：ガジェット枠を隠す */
+.widget:has(#toc-custom-widget) {
+    display: none;
 }
 
-/* ハイライト時のスタイル：主の指定色 (#0f2b46) を使用 */
+/* 目次全体のコンテナ */
+.toc-widget-container {
+    width: 100%;
+}
+
+/* ハイライト時のスタイル */
 .toc-link.active {
     color: #0f2b46 !important;
     font-weight: 700 !important;
@@ -3459,26 +3464,21 @@ input.gsc-input {
 <script type="text/javascript">
 //<![CDATA[
 (function($){
-    $(window).on('load', function(){
+    // 実行を高速化するため load ではなく ready (DOMContentLoaded) を使用
+    $(function(){
         var $postBody = $('.post-body, .entry-content, .item-post-inner').first();
         var $tocArea = $('#toc-content-area');
         var $widget = $('#toc-custom-widget');
         var $parentGadget = $widget.closest('.widget');
         
-        // 1. 要素が存在しない場合はガジェットごと隠す
-        if ($postBody.length === 0 || $tocArea.length === 0) {
-            $parentGadget.hide();
-            return;
-        }
+        if ($postBody.length === 0 || $tocArea.length === 0) return;
 
         var $headings = $postBody.find('h2, h3');
         
-        // 2. 見出しがない場合はガジェットごと隠す
+        // 見出しがない場合は隠したまま終了
         if ($headings.length === 0) {
             $parentGadget.hide();
             return;
-        } else {
-            $parentGadget.show();
         }
 
         // 目次生成
@@ -3497,63 +3497,71 @@ input.gsc-input {
             li.append(a);
             $ul.append(li);
         });
+        
         $tocArea.empty().append($ul);
-        $widget.css('visibility','visible');
 
-        var offset = $parentGadget.offset().top;
-        var originalWidth = $parentGadget.width();
-        var $footer = $('#footer, footer, .footer-wrapper, #footer-wrapper').first();
+        // 生成直後に表示（画像待ちをしない）
+        $parentGadget.show();
 
-        function updateTocPosition(){
-            var scrollTop = $(window).scrollTop();
-            var windowWidth = $(window).width();
-            
-            if(windowWidth > 768){
-                var footerTop = $footer.length ? $footer.offset().top : $(document).height();
-                var widgetHeight = $parentGadget.outerHeight();
-                var topPadding = 20;
-                var stopLimit = footerTop - widgetHeight - topPadding - 30;
+        // スクロール追従設定（画像読み込みで高さが変わるため、ここは load 後に再計算）
+        var updateTocPosition;
+        
+        $(window).on('load', function(){
+            var offset = $parentGadget.offset().top;
+            var originalWidth = $parentGadget.width();
+            var $footer = $('#footer, footer, .footer-wrapper, #footer-wrapper').first();
 
-                if(scrollTop > offset){
-                    if(scrollTop > stopLimit){
-                        $parentGadget.css({
-                            'position':'absolute',
-                            'top': stopLimit+'px',
-                            'width': originalWidth+'px',
-                            'z-index':'99'
-                        });
+            updateTocPosition = function(){
+                var scrollTop = $(window).scrollTop();
+                var windowWidth = $(window).width();
+                
+                if(windowWidth > 768){
+                    var footerTop = $footer.length ? $footer.offset().top : $(document).height();
+                    var widgetHeight = $parentGadget.outerHeight();
+                    var topPadding = 20;
+                    var stopLimit = footerTop - widgetHeight - topPadding - 30;
+
+                    if(scrollTop > offset){
+                        if(scrollTop > stopLimit){
+                            $parentGadget.css({
+                                'position':'absolute',
+                                'top': stopLimit+'px',
+                                'width': originalWidth+'px',
+                                'z-index':'99'
+                            });
+                        }else{
+                            $parentGadget.css({
+                                'position':'fixed',
+                                'top': topPadding+'px',
+                                'width': originalWidth+'px',
+                                'z-index':'99'
+                            });
+                        }
                     }else{
-                        $parentGadget.css({
-                            'position':'fixed',
-                            'top': topPadding+'px',
-                            'width': originalWidth+'px',
-                            'z-index':'99'
-                        });
+                        $parentGadget.css({'position':'static','width':'auto'});
                     }
                 }else{
                     $parentGadget.css({'position':'static','width':'auto'});
                 }
-            }else{
-                $parentGadget.css({'position':'static','width':'auto'});
-            }
 
-            // ハイライト判定
-            var activeId = "";
-            $headings.each(function(){
-                var targetTop = $(this).offset().top;
-                if(scrollTop > targetTop - 110){
-                    activeId = $(this).attr('id');
+                // ハイライト判定
+                var activeId = "";
+                $headings.each(function(){
+                    var targetTop = $(this).offset().top;
+                    if(scrollTop > targetTop - 110){
+                        activeId = $(this).attr('id');
+                    }
+                });
+
+                $('.toc-link').removeClass('active');
+                if(activeId !== ""){
+                    $('.toc-link[href="#'+activeId+'"]').addClass('active');
                 }
-            });
+            };
 
-            $('.toc-link').removeClass('active');
-            if(activeId !== ""){
-                $('.toc-link[href="#'+activeId+'"]').addClass('active');
-            }
-        }
-
-        $(window).on('scroll resize', updateTocPosition);
-        updateTocPosition(); 
+            $(window).on('scroll resize', updateTocPosition);
+            updateTocPosition(); 
+        });
     });
 })(jQuery);
 //]]]]><![CDATA[>
@@ -4156,7 +4164,7 @@ jQuery(document).ready(function($){
 })();
 // ]]>
 </script>
-
+  
 <!-- アーカイブ日付フォーマット -->    
 <script>
 // <![CDATA[
@@ -4186,7 +4194,7 @@ jQuery(document).ready(function($){
   setTimeout(updateArchiveFormat, 500);
 })();
 // ]]>
-</script> 	
+</script>  
   
 <!-- User CSS & Js -->  
   
