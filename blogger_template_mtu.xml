@@ -896,6 +896,30 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
    margin-top: 2em;
    overflow: hidden;
 }
+
+/* パンくずリスト */
+.bc-sep {
+  display: none !important;
+}
+
+.bc-item-unit:has(a[href*="%23"]) {
+  display: none !important;
+}
+.bc-item-unit:not([style*="display: none"]) ~ .bc-item-unit {
+  display: none !important;
+}
+
+.breadcrumbs { 
+  display: flex; 
+  align-items: center; 
+  font-size: 14px; 
+}
+
+.bc-label-link { 
+  text-decoration: none; 
+  color: #333; 
+  margin-left: 8px; /* 「>」とラベルの間の余白 */
+}
 /* 個別記事本文 */
 
 #single-content {
@@ -1052,8 +1076,7 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
    font-family: "Font Awesome 5 Free";
    font-weight: 900;
 }
-/* はてなはアイコンを表示せず、HTMLの「B!」を活かす */
-
+/* はてなはアイコン*/
 .single-share-hatena::before {
    content: none !important;
 }
@@ -1079,7 +1102,7 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
     cursor: pointer;
 }
 .single-share-copy::before {
-    content: "\f0c1" !important; /* チェーンのアイコン */
+    content: "\f0c1" !important;
     font-family: "Font Awesome 5 Free" !important;
     font-weight: 900 !important;
     font-size: 18px;
@@ -1749,7 +1772,8 @@ input.gsc-input {
 
 
 ]]></b:skin>
-    <b:include data='blog' name='google-analytics'/>
+ 
+<b:include data='blog' name='google-analytics'/>
   </head>
 <body>
 <div id='site-header-wrap'>
@@ -2458,35 +2482,37 @@ input.gsc-input {
 </b:includable>
         <b:includable id='mybreadcrumb' var='posts'>
   <b:if cond='data:view.isSingleItem or data:view.isLabelSearch'>
-    
-    <div class='breadcrumbs' itemscope='itemscope' itemtype='http://schema.org/BreadcrumbList'>
-      <span itemprop='itemListElement' itemscope='itemscope' itemtype='http://schema.org/ListItem'>
+    <div class='breadcrumbs' id='custom-breadcrumbs' itemscope='itemscope' itemtype='http://schema.org/BreadcrumbList'>
+      <span class='bc-home' itemprop='itemListElement' itemscope='itemscope' itemtype='http://schema.org/ListItem'>
         <a href='https://r50gamersub.blogspot.com/' itemprop='item'>
           <span itemprop='name'>ホーム</span>
         </a>
         <meta content='1' itemprop='position'/>
-      </span> / 
-
-      <span itemprop='itemListElement' itemscope='itemscope' itemtype='http://schema.org/ListItem'>
-        <b:if cond='data:view.isLabelSearch'>
+      </span>
+      <b:if cond='data:view.isLabelSearch'>
+        <span class='bc-sep'> / </span>
+        <span itemprop='itemListElement' itemscope='itemscope' itemtype='http://schema.org/ListItem'>
           <a expr:href='data:view.url' itemprop='item'>
             <span itemprop='name'><data:view.search.label/></span>
           </a>
-        <b:else/>
-          <b:loop limit='1' values='data:posts' var='p'>
-            <b:if cond='data:p.labels'>
-              <b:with value='data:p.labels.first' var='label'>
-                <a expr:href='data:label.url' itemprop='item'>
+          <meta content='2' itemprop='position'/>
+        </span>
+      <b:else/>
+        <b:loop limit='1' values='data:posts' var='p'>
+          <b:loop values='data:p.labels' var='label'>
+            <span class='bc-item-unit'>
+              <span class='bc-sep'> / </span>
+              <span itemprop='itemListElement' itemscope='itemscope' itemtype='http://schema.org/ListItem'>
+                <a class='bc-label-link' expr:href='data:label.url' itemprop='item'>
                   <span itemprop='name'><data:label.name/></span>
                 </a>
-              </b:with>
-            </b:if>
+                <meta content='2' itemprop='position'/>
+              </span>
+            </span>
           </b:loop>
-        </b:if>
-        <meta content='2' itemprop='position'/>
-      </span>
+        </b:loop>
+      </b:if>
     </div>
-
   <b:else/>
     <div class='breadcrumb-spacer' style='height: 40px;'/>
   </b:if>
@@ -4071,6 +4097,43 @@ jQuery(document).ready(function($){
 })();
 //]]>
 </script>
+
+<!-- パンくずリスト ラベル優先表示 -->  
+<script>
+// <![CDATA[
+(function() {
+  const cleanup = () => {
+    const container = document.getElementById('custom-breadcrumbs');
+    if (!container) return;
+
+    const units = Array.from(container.querySelectorAll('.bc-item-unit'));
+    let foundValid = false;
+
+    units.forEach(unit => {
+      const link = unit.querySelector('a');
+      if (!link) return;
+
+      const href = link.getAttribute('href');
+      
+      // 1. ハッシュタグ（%23）または2つ目以降のラベルなら「箱ごと」削除
+      if (href.indexOf('%23') !== -1 || foundValid) {
+        unit.parentNode.removeChild(unit);
+      } 
+      // 2. 最初に見つかった「正しいラベル」の場合
+      else {
+        foundValid = true;
+        // 箱の中にある「/」（.bc-sep）だけをピンポイントで削除
+        const sep = unit.querySelector('.bc-sep');
+        if (sep) sep.parentNode.removeChild(sep);
+      }
+    });
+  };
+
+  window.addEventListener('DOMContentLoaded', cleanup);
+  setTimeout(cleanup, 500); 
+})();
+// ]]>
+</script>  
   
 <!-- User CSS & Js -->  
   
