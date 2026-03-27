@@ -2565,7 +2565,7 @@ input.gsc-input {
       }
     </script>
     <div class='pagination'/>
-    <script type='text/javascript'>
+<script type='text/javascript'>
   const blogUrl = &quot;<data:blog.homepageUrl.canonical/>&quot;;
   const label = &quot;<b:eval expr='data:blog.searchLabel'/>&quot;;
   const query = &quot;<b:eval expr='data:blog.searchQuery'/>&quot;;
@@ -2633,12 +2633,24 @@ input.gsc-input {
   }
 
   function setPageUrl(targetPage, isArchive, archiveMatch) {
+    let base = blogUrl.replace(/\/$/, "");
+    let currentPath = window.location.pathname;
+
+    // 【重要】1ページ目へ戻るリンクの修正
+    // 欠落を防ぐため updated-max パラメータを付与せず初期URLに戻す
+    if (targetPage === 1) {
+      let firstPageHref = isArchive ? (base + currentPath) : (base + '/search' + (label != '' ? '/label/' + encodeURIComponent(label) : ''));
+      firstPageHref += (firstPageHref.indexOf('?') <= -1 ? '?' : '&') + 'max-results=' + maxResults + '#Page-1';
+      
+      const firstPageLink = document.querySelector(selector + ' #Page-1');
+      if (firstPageLink) firstPageLink.href = firstPageHref;
+      return; 
+    }
+
+    // 2ページ目以降の処理（従来通り日付ベースでURL生成）
     let startIndex = (targetPage - 1) * maxResults;
     if (startIndex <= 0) startIndex = 1;
-
-    let base = blogUrl.replace(/\/$/, "");
     let feedUrl = base + "/feeds/posts/summary";
-    let currentPath = window.location.pathname;
 
     if (isArchive) {
       let year = archiveMatch[1];
@@ -2658,7 +2670,7 @@ input.gsc-input {
         const date = encodeDate(json.feed.entry[0].published.$t);
 
         let hrefBase = isArchive ? (base + currentPath) : (base + '/search' + (label != '' ? '/label/' + encodeURIComponent(label) : ''));
-        let finalHref = hrefBase.replace(/\/$/, "") + '?updated-max=' + date + '&max-results=' + maxResults + '&start=' + startIndex + '&by-date=false#Page-' + targetPage;
+        let finalHref = hrefBase.replace(/\/$/, "") + (hrefBase.indexOf('?') <= -1 ? '?' : '&') + 'updated-max=' + date + '&max-results=' + maxResults + '&start=' + startIndex + '&by-date=false#Page-' + targetPage;
 
         const liElem = document.querySelector(selector + ' #Page-' + targetPage);
         if (liElem) liElem.href = finalHref;
@@ -2670,7 +2682,7 @@ input.gsc-input {
     return encodeURIComponent(dateStr);
   }
   //]]>
-    </script>
+</script>
   </b:if>
   <b:if cond='data:blog.pageType == &quot;item&quot;'>
     <div class='blog-pager' id='blog-pager'>
