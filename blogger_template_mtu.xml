@@ -206,6 +206,47 @@ html, body {
    margin: 0;
    padding: 0;
 }
+#page-top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 50px;
+  height: 50px;
+  background: $(brand.color);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  z-index: 999; /* 他の要素に隠れないよう数値を上げました */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+#page-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#page-top:hover {
+  background: #000;
+  transform: scale(1.1);
+}
+
+#page-top i {
+  font-size: 20px;
+  color: #ffffff !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 /****************************************
           ヘッダー＋ナビゲーション（修正済）
 *****************************************/
@@ -3472,19 +3513,52 @@ input.gsc-input {
     <div id='footer-item3'>
 <b:section id='フッター3'/>
     </div>
-   
-    
     </div>
     
-          <p id='copyright'><data:blog.title/></p>
+  <p id='copyright'><data:blog.title/></p>
   <p id='designed-by'><a href='http://qooq.dododori.com' style='color:#999999' target='_blank'>&#169; QooQ</a></p>
   <p id='customize-by'><a href='https://blogger.matsusanjpn.com' style='color:#999999' target='_blank'>&#169; matsusan</a></p>
     
   </div>
  </div>
+  
+
 
   
 <!-- スクリプト -->
+  
+<!-- 上へ戻る -->  
+<a href='javascript:void(0);' id='page-top'>
+  <i class='fa-solid fa-chevron-up'/>
+</a>    
+<script type='text/javascript'>
+//<![CDATA[
+(function() {
+  const pageTop = document.getElementById("page-top");
+  if (pageTop) {
+    // スクロール検知
+    window.addEventListener("scroll", function() {
+      // 200px以上スクロールしたら表示
+      if (window.pageYOffset > 200) {
+        pageTop.classList.add("show");
+      } else {
+        pageTop.classList.remove("show");
+      }
+    });
+
+    // クリックイベント
+    pageTop.addEventListener("click", function(e) {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  }
+})();
+//]]>
+</script>
+  
 <!-- ハンバーガーメニュー -->
 <script type='text/javascript'>
 //<![CDATA[
@@ -3495,6 +3569,7 @@ $(document).ready(function(){
 });
 //]]>
 </script>
+  
 <!-- ページ送り -->
 <script type='text/javascript'>
 //<![CDATA[  
