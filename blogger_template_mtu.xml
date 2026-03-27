@@ -2346,8 +2346,8 @@ input.gsc-input {
     </div>
   </div>
 </b:includable>
-        <b:includable id='mybreadcrumb' var='posts'>
-  <b:if cond='!data:view.isHomepage and (data:view.isLabelSearch or data:posts.first.labels)'>
+<b:includable id='mybreadcrumb' var='posts'>
+  <b:if cond='data:view.isItem or data:view.isLabelSearch'>
     
     <div class='breadcrumbs' itemscope='itemscope' itemtype='http://schema.org/BreadcrumbList'>
       <span itemprop='itemListElement' itemscope='itemscope' itemtype='http://schema.org/ListItem'>
