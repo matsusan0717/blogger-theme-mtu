@@ -1510,6 +1510,56 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
       display: block;
    }
 }
+
+/* 親コンテナ：全体を中央寄せ */
+.footer-nav-container {
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* リスト本体：横並びと余白の解除 */
+.footer-nav-list {
+  display: inline-flex; /* 内容の幅に合わせて中央に配置 */
+  flex-wrap: wrap;      /* スマホ等で溢れたら改行 */
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 各リストアイテムの設定 */
+.footer-nav-list li {
+  display: flex;
+  align-items: center;
+  font-size: 13px;      /* お好みのサイズに調整してください */
+  color: #ffffff;
+}
+
+/* リンクの色と装飾 */
+.footer-nav-list li a {
+  color: #ffffff !important;
+  text-decoration: none;
+  transition: opacity 0.3s;
+  padding: 0 15px;      /* 左右の間隔 */
+}
+
+.footer-nav-list li a:hover {
+  opacity: 0.7;
+}
+
+/* 「｜」で区切る設定（最後のアイテム以外に適用） */
+.footer-nav-list li:not(:last-child)::after {
+  content: "|";
+  color: #ffffff;
+  font-size: 12px;
+  opacity: 0.5;         /* 区切り線を少し薄くして馴染ませる */
+}
+
+#LinkList1.widget.LinkList{
+  padding: 0; 
+  margin-bottom: 0;'
+}
+
 /****************************************
         個別アイテム
 *****************************************/
@@ -1696,6 +1746,7 @@ input.gsc-input {
    .serif-left {
       margin-left: 80px; }
 }
+
 
 ]]></b:skin>
     <b:include data='blog' name='google-analytics'/>
@@ -3157,7 +3208,7 @@ input.gsc-input {
           <b:widget-setting name='sorting'>FREQUENCY</b:widget-setting>
           <b:widget-setting name='display'>CLOUD</b:widget-setting>
           <b:widget-setting name='selectedLabelsList'>ESSAY,エッセイ,ガジェット,ゲーム,東京パフォーマンスドール</b:widget-setting>
-          <b:widget-setting name='showType'>ALL</b:widget-setting>
+          <b:widget-setting name='showType'>USER_SELECTED</b:widget-setting>
           <b:widget-setting name='showFreqNumbers'>false</b:widget-setting>
         </b:widget-settings>
         <b:includable id='main'>
@@ -3487,13 +3538,41 @@ input.gsc-input {
  </div>
 
  <div id='footer'>
+   <b:section id='フッター1'>
+     <b:widget id='LinkList1' locked='false' title='' type='LinkList' version='1'>
+       <b:widget-settings>
+         <b:widget-setting name='shownum'>3</b:widget-setting>
+         <b:widget-setting name='sorting'>NONE</b:widget-setting>
+         <b:widget-setting name='text-1'>PRIVACY POLICY</b:widget-setting>
+         <b:widget-setting name='link-1'>#</b:widget-setting>
+         <b:widget-setting name='text-0'>ABOUT ME</b:widget-setting>
+         <b:widget-setting name='link-2'>#</b:widget-setting>
+         <b:widget-setting name='link-0'>#</b:widget-setting>
+         <b:widget-setting name='text-2'>CONTACT</b:widget-setting>
+       </b:widget-settings>
+       <b:includable id='main'>
+
+<b:if cond='data:title != &quot;&quot;'><h2><data:title/></h2></b:if>
+<div class='widget-content'>
+<div class='widget-content footer-nav-container'>
+  <ul class='footer-nav-list'>
+     <b:loop values='data:links' var='link'>
+       <li><a expr:href='data:link.target'><data:link.name/></a></li>
+     </b:loop>
+   </ul>
+   <b:include name='quickedit'/>
+ </div>
+ </div>  
+</b:includable>
+     </b:widget>
+   </b:section>
   <div class='container'>
    <div id='footer-inner'>
     <div id='footer-item1'>
-<b:section id='フッター1'/>
+<b:section id='フッターL'/>
     </div>
     <div id='footer-item2'>
-    <b:section id='フッター2'>
+    <b:section id='フッターC'>
       <b:widget id='Attribution1' locked='false' title='' type='Attribution'>
         <b:widget-settings>
           <b:widget-setting name='copyright'/>
@@ -3511,7 +3590,7 @@ input.gsc-input {
     </b:section>
 				</div>
     <div id='footer-item3'>
-<b:section id='フッター3'/>
+<b:section id='フッターR'/>
     </div>
     </div>
     
