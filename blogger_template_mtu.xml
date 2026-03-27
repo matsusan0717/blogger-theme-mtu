@@ -2365,7 +2365,7 @@ input.gsc-input {
   </div>
 </b:includable>
         <b:includable id='mybreadcrumb' var='posts'>
-  <b:if cond='data:view.isItem or data:view.isLabelSearch'>
+  <b:if cond='data:view.isSingleItem or data:view.isLabelSearch'>
     
     <div class='breadcrumbs' itemscope='itemscope' itemtype='http://schema.org/BreadcrumbList'>
       <span itemprop='itemListElement' itemscope='itemscope' itemtype='http://schema.org/ListItem'>
@@ -2381,11 +2381,15 @@ input.gsc-input {
             <span itemprop='name'><data:view.search.label/></span>
           </a>
         <b:else/>
-          <b:with value='data:posts.first.labels.first' var='firstLabel'>
-            <a expr:href='data:firstLabel.url' itemprop='item'>
-              <span itemprop='name'><data:firstLabel.name/></span>
-            </a>
-          </b:with>
+          <b:loop limit='1' values='data:posts' var='p'>
+            <b:if cond='data:p.labels'>
+              <b:with value='data:p.labels.first' var='label'>
+                <a expr:href='data:label.url' itemprop='item'>
+                  <span itemprop='name'><data:label.name/></span>
+                </a>
+              </b:with>
+            </b:if>
+          </b:loop>
         </b:if>
         <meta content='2' itemprop='position'/>
       </span>
