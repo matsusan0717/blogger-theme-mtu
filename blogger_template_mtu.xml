@@ -1896,7 +1896,7 @@ input.gsc-input {
       <h3 style='font-size: 20px; font-weight: 900; color: #555555; margin-bottom: 25px; display: flex; align-items: center;'>
         <span style='background: #2c3e50; color: #fff; padding: 2px 10px; margin-right: 10px; border-radius: 3px; font-size: 14px;'>NEXT</span> あわせて読みたい
       </h3>
-      <div id='related-posts-canvas'></div>
+      <div id='related-posts-canvas'/>
     </div>
 
     <script type='text/javascript'>
@@ -2347,42 +2347,36 @@ input.gsc-input {
   </div>
 </b:includable>
         <b:includable id='mybreadcrumb' var='posts'>
-<div class='breadcrumbs' itemscope='itemscope' itemtype='http://schema.org/BreadcrumbList'>
-  <span itemprop='itemListElement' itemscope='itemscope' itemtype='http://schema.org/ListItem'>
-    <a expr:href='data:blog.homepageUrl' itemprop='item'>
-      <span itemprop='name'>ホーム</span>
-    </a>
-    <meta content='1' itemprop='position'/>
-  </span> / 
-  <b:if cond='data:blog.pageType == &quot;item&quot;'>
-    <b:loop values='data:posts' var='post'>
-      <b:if cond='data:post.labels'>
-        <b:loop values='data:post.labels' var='label'>
-          <b:if cond='data:label.isLast == &quot;true&quot;'>
-            <span itemprop='itemListElement' itemscope='itemscope' itemtype='http://schema.org/ListItem'>
-              <a expr:href='data:label.url' itemprop='item'>
-                <span itemprop='name'><data:label.name/></span>
-              </a>
-              <meta content='2' itemprop='position'/>
-            </span> / 
-          </b:if>
-        </b:loop>
-      <b:else/>
-          <span>その他</span> / 
-      </b:if>
-    </b:loop>
-  <b:else/>
-    <b:if cond='data:blog.pageName != &quot;&quot;'>
+  <b:if cond='!data:view.isHomepage and (data:view.isLabelSearch or data:posts.first.labels)'>
+    
+    <div class='breadcrumbs' itemscope='itemscope' itemtype='http://schema.org/BreadcrumbList'>
       <span itemprop='itemListElement' itemscope='itemscope' itemtype='http://schema.org/ListItem'>
-        <a expr:href='data:blog.url' itemprop='item'>
-          <span itemprop='name'><data:blog.pageName/></span>
+        <a href='https://r50gamersub.blogspot.com/' itemprop='item'>
+          <span itemprop='name'>ホーム</span>
         </a>
-        <meta content='2' itemprop='position'/>
+        <meta content='1' itemprop='position'/>
       </span> / 
-    </b:if>
+
+      <span itemprop='itemListElement' itemscope='itemscope' itemtype='http://schema.org/ListItem'>
+        <b:if cond='data:view.isLabelSearch'>
+          <a expr:href='data:view.url' itemprop='item'>
+            <span itemprop='name'><data:view.search.label/></span>
+          </a>
+        <b:else/>
+          <b:with value='data:posts.first.labels.first' var='firstLabel'>
+            <a expr:href='data:firstLabel.url' itemprop='item'>
+              <span itemprop='name'><data:firstLabel.name/></span>
+            </a>
+          </b:with>
+        </b:if>
+        <meta content='2' itemprop='position'/>
+      </span>
+    </div>
+
+  <b:else/>
+    <div class='breadcrumb-spacer' style='height: 40px;'/>
   </b:if>
-</div>
-        </b:includable>
+</b:includable>
         <b:includable id='nextprev'>
   <b:if cond='data:blog.pageType in {&quot;index&quot;, &quot;archive&quot;, &quot;label&quot;, &quot;search&quot;}'>
     <style>
@@ -2826,7 +2820,7 @@ input.gsc-input {
    </div>
    <div id='sub-content'>
     <b:section id='サイドバー'>
-      <b:widget id='HTML1' locked='false' title='文字のデフォルト大文字サイズの変更' type='HTML' version='1'>
+      <b:widget id='HTML1' locked='false' title='' type='HTML' version='1'>
         <b:widget-settings>
           <b:widget-setting name='content'><![CDATA[<style>
 #matsu-profile-container { display:flex; justify-content:center; font-family:sans-serif; }
