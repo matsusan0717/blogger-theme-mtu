@@ -2641,7 +2641,7 @@ input.gsc-input {
       </a>
     </b:if>
     <div class='list-item-inner'>
-      <p class='list-item-date'><script type='text/javascript'>document.write(jsdate)</script></p>
+      <p class='list-item-date'><i class='fa-regular fa-calendar' style='margin-right:5px;'/><script type='text/javascript'>document.write(jsdate)</script></p>
       <h3 class='list-item-title'><a expr:href='data:post.url'><data:post.title/></a></h3>
       
       <b:if cond='data:blog.pageType == &quot;index&quot;'>
