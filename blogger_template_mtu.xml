@@ -1452,10 +1452,10 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
    margin-right: 2%;
 }
 #footer .widget {
-   padding-top: 30px;
+   padding-top: 15px;
 }
 #footer .widget:last-child {
-   padding-bottom: 30px;
+   padding-bottom: 15px;
 }
 #footer .container {
    max-width: 1180px;
