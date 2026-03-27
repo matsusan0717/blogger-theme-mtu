@@ -1479,6 +1479,13 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
 	width: 100%;
     padding: 5px;
 }
+#ArchiveList .archivedate.expanded{
+	margin: .5em 0;
+}
+.BlogArchive #ArchiveList ul ul li{
+    padding-top: .5em;
+	padding-left: 1.6em;
+}
 /****************************************
         フッター
 *****************************************/
@@ -3337,7 +3344,7 @@ input.gsc-input {
       </b:widget>
       <b:widget id='BlogArchive1' locked='false' title='ブログ アーカイブ' type='BlogArchive' version='1'>
         <b:widget-settings>
-          <b:widget-setting name='showStyle'>MENU</b:widget-setting>
+          <b:widget-setting name='showStyle'>HIERARCHY</b:widget-setting>
           <b:widget-setting name='yearPattern'>yyyy</b:widget-setting>
           <b:widget-setting name='showWeekEnd'>true</b:widget-setting>
           <b:widget-setting name='monthPattern'>MMMM yyyy</b:widget-setting>
@@ -4169,32 +4176,62 @@ jQuery(document).ready(function($){
 <script>
 // <![CDATA[
 (function() {
-  const updateArchiveFormat = () => {
-    const select = document.getElementById('BlogArchive1_ArchiveMenu');
-    if (!select) return;
+  /**
+   * true  = 初回読み込み時のみ「閉じた」状態にする
+   * false = 標準（最新を展開）のまま
+   */
+  const CONFIG_COLLAPSE_INIT = true; 
+  let isFirstRun = true; // 初回実行判定フラグ
 
-    const options = select.querySelectorAll('option');
-    
-    options.forEach(option => {
-      const text = option.textContent;
-      // 正規表現で「月」「年」「件数」を抽出
-      // 例: "3月 2026 (1)" -> [1]:3月, [2]:2026, [3]:(1)
-      const match = text.match(/^(\d+月)\s+(\d{4})\s+(\(\d+\))$/);
-      
+  const updateArchive = () => {
+    const archiveList = document.getElementById('BlogArchive1_ArchiveList');
+    if (!archiveList) return;
+
+    // 1. 日付フォーマットの変換 (2026 3月)
+    const archiveLinks = archiveList.querySelectorAll('.post-count-link');
+    archiveLinks.forEach(link => {
+      const text = link.textContent.trim();
+      const match = text.match(/^(\d+月)\s+(\d{4})$/);
       if (match) {
-        // 並び順を「年 月 (件数)」に書き換え
-        option.textContent = `${match[2]} ${match[1]} ${match[3]}`;
+        link.textContent = `${match[2]} ${match[1]}`;
       }
     });
+
+    // 2. 初回のみ「閉じる」処理を実行
+    if (CONFIG_COLLAPSE_INIT && isFirstRun) {
+      const expandedItems = archiveList.querySelectorAll('.archivedate.expanded');
+      expandedItems.forEach(item => {
+        item.classList.remove('expanded');
+        item.classList.add('collapsed');
+
+        const zippy = item.querySelector('.zippy');
+        if (zippy) {
+          zippy.classList.remove('toggle-open');
+          zippy.innerHTML = '&#9658;&nbsp;'; // ►
+        }
+      });
+      isFirstRun = false; // 二回目以降（クリック時など）はこのブロックを通さない
+    }
   };
 
   // 実行
-  updateArchiveFormat();
-  // Bloggerの動的読み込みに対応するため、少し遅らせて再実行
-  setTimeout(updateArchiveFormat, 500);
+  updateArchive();
+  setTimeout(updateArchive, 200);
+
+  // クリック時は「フォーマット変換」のみを動かす
+  document.addEventListener('click', (e) => {
+    const toggle = e.target.closest('.toggle');
+    if (toggle) {
+      // ユーザーのクリックによる展開を邪魔しないよう、少し遅らせて文字だけ整える
+      setTimeout(() => {
+        isFirstRun = false; 
+        updateArchive();
+      }, 100);
+    }
+  }, true);
 })();
 // ]]>
-</script>  
+</script> 
   
 <!-- User CSS & Js -->  
   
