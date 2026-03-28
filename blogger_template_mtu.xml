@@ -1435,7 +1435,7 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
 /* Label Widget Custom Design */
 .list-label-widget-content ul li a {
     display: inline-block;
-    padding: 5px 12px;
+    padding: 0.4em 0.8em;
     margin: 4px;
     text-decoration: none;
     border: 1px solid $(brand.color);
@@ -1443,7 +1443,7 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
     color: $(brand.color);
     border-radius: 4px;
     transition: all 0.3s ease;
-	font-size:13px;
+	font-size:12px;
 }
 
 .widget li, .BlogArchive #ArchiveList ul.flat li {
