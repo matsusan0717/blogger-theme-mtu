@@ -2636,8 +2636,6 @@ input.gsc-input {
     let base = blogUrl.replace(/\/$/, "");
     let currentPath = window.location.pathname;
 
-    // 【重要】1ページ目へ戻るリンクの修正
-    // 欠落を防ぐため updated-max パラメータを付与せず初期URLに戻す
     if (targetPage === 1) {
       let firstPageHref = isArchive ? (base + currentPath) : (base + '/search' + (label != '' ? '/label/' + encodeURIComponent(label) : ''));
       firstPageHref += (firstPageHref.indexOf('?') <= -1 ? '?' : '&') + 'max-results=' + maxResults + '#Page-1';
@@ -2647,7 +2645,6 @@ input.gsc-input {
       return; 
     }
 
-    // 2ページ目以降の処理（従来通り日付ベースでURL生成）
     let startIndex = (targetPage - 1) * maxResults;
     if (startIndex <= 0) startIndex = 1;
     let feedUrl = base + "/feeds/posts/summary";
@@ -2669,8 +2666,13 @@ input.gsc-input {
         if (!json.feed || !json.feed.entry) return;
         const date = encodeDate(json.feed.entry[0].published.$t);
 
-        let hrefBase = isArchive ? (base + currentPath) : (base + '/search' + (label != '' ? '/label/' + encodeURIComponent(label) : ''));
-        let finalHref = hrefBase.replace(/\/$/, "") + (hrefBase.indexOf('?') <= -1 ? '?' : '&') + 'updated-max=' + date + '&max-results=' + maxResults + '&start=' + startIndex + '&by-date=false#Page-' + targetPage;
+        // 【修正箇所】アーカイブ時も /search をベースにする
+        let hrefBase = base + '/search';
+        if (label != '') {
+          hrefBase += '/label/' + encodeURIComponent(label);
+        }
+
+        let finalHref = hrefBase + (hrefBase.indexOf('?') <= -1 ? '?' : '&') + 'updated-max=' + date + '&max-results=' + maxResults + '&start=' + startIndex + '&by-date=false#Page-' + targetPage;
 
         const liElem = document.querySelector(selector + ' #Page-' + targetPage);
         if (liElem) liElem.href = finalHref;
