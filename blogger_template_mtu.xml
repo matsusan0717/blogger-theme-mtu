@@ -422,6 +422,22 @@ html {
    height: auto;
    top: auto;
 }
+@media (max-width: 768px) {
+    #navigation-label, #navigation-label:active, #navigation-label:focus, #navigation-label:hover {
+        display: block !important;
+        position: absolute !important;
+        top: 0px !important;
+        right: 15px !important;
+        transform: none !important;
+        z-index: 10001 !important;
+        color: #fff !important;
+        background: transparent !important;
+        font-size: 1.6em !important;
+        padding: 8px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}	
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    プルダウンメニュー
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
