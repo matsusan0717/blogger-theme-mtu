@@ -3063,7 +3063,7 @@ input.gsc-input {
           <b:widget-setting name='content'><![CDATA[<style>
 #matsu-profile-container { display:flex; justify-content:center; font-family:sans-serif; }
 #matsu-profile-container .profile-card { background:#ffffff; border-radius:6px; text-align:center;width: 100%; }
-#matsu-profile-container .cover-area { position:relative; background:#cccccc center/cover /* ★カバー画像URLをここに設定してください */; height:180px; border-radius:6px 6px 0 0; }
+#matsu-profile-container .cover-area { position:relative; background:#cccccc center/cover url('★カバー画像URL'); height:180px; border-radius:6px 6px 0 0; }
 #matsu-profile-container .avatar-img { position:absolute; width:120px; height:120px; object-fit:cover; bottom:-60px; left:15px; border-radius:50%; border:4px solid #ffffff; background:#ffffff; }
 #matsu-profile-container .name { font-size:19px; margin:25px 5px 0 145px; color:#222; text-align:left; font-weight:700; }
 #matsu-profile-container .description { margin-top:50px; line-height:1.6; font-size:14px; }
