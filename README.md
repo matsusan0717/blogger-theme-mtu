@@ -4,7 +4,7 @@ QooQ をベースにカスタマイズした Blogger 用テンプレートです
 
 ---
 
-![エビフライトライアングル](http://i.imgur.com/Jjwsc.jpg](https://imgur.com/a/VtEL5B4 "サンプル")
+![エビフライトライアングル](https://i.imgur.com/zOgGNyU.jpeg)("サンプル")
 
 ---
 
