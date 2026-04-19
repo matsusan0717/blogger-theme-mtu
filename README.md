@@ -4,7 +4,7 @@ QooQ をベースにカスタマイズした Blogger 用テンプレートです
 
 ---
 
-!["MTU"]("")
+!["MTU"](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh_irDQxgd-BNX5BUfYPX9-izEQ4Otg9hUHKTMfYOUrKrmvBfuP1nv8L01zfMe0VDSaOIZLh0ap_DEwMF6JJr36qU5fkimaP-XjOB2Pfih80E_uUcRg6OIQD11YMY4ACEbROb7bsHBuOfXHfqJDpSVQdGl2SaIJsAkszYfUSFgv639x3LHxBpHvEcJZBXo/s1600/%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88_20-4-2026_74918_r50gamersub.blogspot.com.jpeg)
 
 ---
 
