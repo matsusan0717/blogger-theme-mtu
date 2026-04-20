@@ -2656,7 +2656,7 @@ input.gsc-input {
         </span>
       <b:else/>
         <b:loop limit='1' values='data:posts' var='p'>
-          <b:loop values='data:p.labels' var='label'>
+          <b:loop values='data:p.labels where(l => l.name not contains "#")' var='label'>
             <span class='bc-item-unit'>
               <span class='bc-sep'> / </span>
               <span itemprop='itemListElement' itemscope='itemscope' itemtype='http://schema.org/ListItem'>
@@ -2670,6 +2670,30 @@ input.gsc-input {
         </b:loop>
       </b:if>
     </div>
+  <b:else/>
+    <div class='breadcrumb-spacer' id='js-dynamic-spacer' style='height: 40px; display: block;'/>
+    
+    <script type='text/javascript'>
+      //<![CDATA[
+      (function() {
+        // 判定対象：注目の投稿ウィジェット
+        var featuredPost = document.getElementById('FeaturedPost1');
+        // 操作対象：スペーサー
+        var spacer = document.getElementById('js-dynamic-spacer');
+        
+        if (featuredPost && spacer) {
+          // ウィジェットが存在し、かつ中身（HTML）が空でないかチェック
+          // trim()で空白を除去し、HTMLが存在すれば「表示されている」と判断
+          var hasContent = featuredPost.innerHTML.replace(/\s+/g, '').length > 0;
+          
+          if (hasContent) {
+            // 注目記事がある場合はスペーサーを非表示（高さ0）にする
+            spacer.style.display = 'none';
+          }
+        }
+      })();
+      //]]>
+    </script>
   </b:if>
 </b:includable>
         <b:includable id='nextprev'>
