@@ -2887,11 +2887,15 @@ input.gsc-input {
         var jsdate = rawDate.split(&#39;(&#39;)[0].trim(); // &#12300;(月)&#12301;などの曜日部分を切り捨て
       </script>
     </b:if>
-    <b:if cond='data:post.thumbnailUrl'>
-      <a expr:href='data:post.url'>
-        <img class='list-item-img' expr:src='resizeImage(data:post.firstImageUrl, 480, &quot;2:1&quot;)' height='240' width='480'/>
-      </a>
-    </b:if>
+    <b:if cond='data:post.firstImageUrl'>
+  <a expr:href='data:post.url'>
+    <img class='list-item-img' expr:src='resizeImage(data:post.firstImageUrl, 480, &quot;2:1&quot;)' height='240' width='480'/>
+  </a>
+<b:else/>
+  <a expr:href='data:post.url'>
+    <img class='list-item-img' height='240' src='https://placehold.jp/50px/70543e/ffffff/1280x720.jpg?text=NO%20IMAGE&amp;css=%7B%22background%22%3A%22%20-webkit-gradient(linear%2C%20left%20top%2C%20left%20bottom%2C%20from(%23666666)%2C%20to(%23cccccc))%22%7D' width='480'/>
+  </a>
+</b:if>
     <div class='list-item-inner'>
       <p class='list-item-date'><i class='fa-regular fa-calendar' style='margin-right:5px;'/><script type='text/javascript'>document.write(jsdate)</script></p>
       <h3 class='list-item-title'><a expr:href='data:post.url'><data:post.title/></a></h3>
