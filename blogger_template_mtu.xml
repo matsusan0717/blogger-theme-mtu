@@ -1935,136 +1935,111 @@ input.gsc-input {
    <div id='main-inner'>
     <div id='main-content'>
     <b:section id='記事表示部分' maxwidgets='2' showaddelement='yes'>
-      <b:widget id='FeaturedPost1' locked='false' title='Featured Post' type='FeaturedPost' version='1'>
-        <b:widget-settings>
-          <b:widget-setting name='showSnippet'>true</b:widget-setting>
-          <b:widget-setting name='showPostTitle'>true</b:widget-setting>
-          <b:widget-setting name='postId'>7280108784417285960</b:widget-setting>
-          <b:widget-setting name='showFirstImage'>true</b:widget-setting>
-          <b:widget-setting name='useMostRecentPost'>true</b:widget-setting>
-        </b:widget-settings>
-        <b:includable id='main'>
-    <b:if cond='data:view.isHomepage'>
-      <b:include name='content'/>
-      <b:include name='quickedit'/>
-    </b:if>
+      <b:widget cond='data:view.isHomepage' id='FeaturedPost1' locked='false' title='注目の投稿' type='FeaturedPost' version='2' visible='true'>
+  <b:widget-settings>
+    <b:widget-setting name='showSnippet'>true</b:widget-setting>
+    <b:widget-setting name='showPostTitle'>true</b:widget-setting>
+    <b:widget-setting name='showFirstImage'>true</b:widget-setting>
+    <b:widget-setting name='useMostRecentPost'>true</b:widget-setting>
+  </b:widget-settings>
+
+  <b:includable id='main' var='this'>
+    <b:include name='snippetedPosts'/>
   </b:includable>
-        <b:includable id='content'>
-  <div class='post-summary'>
-    <b:if cond='data:showFirstImage and data:postFirstImage != &quot;&quot;'>
-      <a class='featured-post-link' expr:href='data:postUrl'>
-        <div class='image-container'>
-          <span class='label-badge badge-left'>Featured Post</span>
-          
-          <img class='image' expr:src='data:postFirstImage'/>
-          
-          <div class='text-overlay'>
-            <b:if cond='data:showPostTitle and data:postTitle != &quot;&quot;'>
-              <h3 class='overlay-title'><data:postTitle/></h3>
+
+  <b:includable id='snippetedPosts'>
+    <b:loop index='i' values='data:posts' var='post'>
+      <div class='post-summary'>
+        <a class='featured-post-link' expr:href='data:post.url'>
+          <div class='image-container'>
+            <span class='label-badge badge-left'>Featured Post</span>
+
+            <b:if cond='data:post.labels'>
+              <b:with value='data:post.labels where(l => l.name not contains "#")' var='cleanLabels'>
+                <b:if cond='data:cleanLabels.any'>
+                  <b:loop index='j' values='data:cleanLabels' var='label'>
+                    <b:if cond='data:j == 0'>
+                      <span class='label-badge badge-right'>
+                        <i class='fa fa-tag' style='margin-right:5px;'/> <data:label.name/>
+                      </span>
+                    </b:if>
+                  </b:loop>
+                <b:else/>
+                  <b:loop index='k' values='data:post.labels' var='label'>
+                    <b:if cond='data:k == 0'>
+                      <span class='label-badge badge-right'>
+                        <i class='fa fa-tag' style='margin-right:5px;'/> <data:label.name/>
+                      </span>
+                    </b:if>
+                  </b:loop>
+                </b:if>
+              </b:with>
             </b:if>
-            <b:if cond='data:showSnippet and data:postSummary != &quot;&quot;'>
-              <p class='overlay-snippet'>
-                <data:postSummary/>
-              </p>
-            </b:if>
+
+            <div class='feat-img'>
+              <b:if cond='data:post.featuredImage'>
+                <img class='image' expr:alt='data:post.title.escaped' expr:src='resizeImage(data:post.featuredImage, 800, "16:9")'/>
+              <b:else/>
+                <img class='image' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEivG-f3UvF6t9.../s1600/no-image.png'/>
+              </b:if>
+            </div>
+
+            <div class='text-overlay'>
+              <b:if cond='data:post.title != ""'>
+                <h3 class='overlay-title'><data:post.title/></h3>
+              </b:if>
+              <b:if cond='data:post.snippets.short != ""'>
+                <p class='overlay-snippet'>
+                  <data:post.snippets.short/>
+                </p>
+              </b:if>
+            </div>
           </div>
-        </div>
-      </a>
-    </b:if>
-  </div>
+        </a>
+      </div>
+    </b:loop>
 
-  <style type='text/css'>
-    .post-summary {
-      width: 100%;
-      margin: 20px 0;
-    }
+    <style type='text/css'>
+      .post-summary { width: 100%; margin: 20px 0; }
+      .featured-post-link { display: block; text-decoration: none; outline: none; color: inherit; }
+      .image-container { position: relative; width: 100%; line-height: 0; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 12px; -webkit-mask-image: -webkit-radial-gradient(white, black); transform: translateZ(0); }
+      .image { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+      .featured-post-link:hover .image { transform: scale(1.05); }
 
-    .featured-post-link {
-      display: block;
-      text-decoration: none;
-      outline: none;
-    }
+      .label-badge {
+        position: absolute;
+        top: 15px;
+        padding: 6px 12px;
+        font-size: 11px;
+        font-weight: bold;
+        color: #ffffff;
+        z-index: 3;
+        border-radius: 4px;
+        line-height: 1.2;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        display: flex;
+        align-items: center;
+      }
+      .badge-left { left: 15px; background-color: #e02d2d; }
+      .badge-right { right: 15px; background-color: rgba(0, 0, 0, 0.7); }
 
-    .image-container {
-      position: relative;
-      width: 100%;
-      line-height: 0;
-      aspect-ratio: 16 / 9;
-      
-      /* --- 角丸を強制する重要設定 --- */
-      overflow: hidden;
-      border-radius: 12px;
-      -webkit-mask-image: -webkit-radial-gradient(white, black); /* Safari等のブラウザでの角丸バグ対策 */
-      transform: translateZ(0); /* レンダリングレイヤーを強制して角丸を適用 */
-    }
+      .text-overlay {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        padding: 60px 20px 20px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
+        color: #ffffff;
+        z-index: 2;
+        line-height: normal;
+      }
+      .overlay-title { margin: 0 0 10px 0; font-size: 22px; font-weight: 800; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .overlay-snippet { margin: 0; font-size: 14px; line-height: 1.6; color: rgba(255, 255, 255, 0.9); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+  </b:includable>
 
-    .image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.5s ease;
-      
-      /* 画像自体にも角丸を念のため適用 */
-      border-radius: 12px;
-    }
-
-    .featured-post-link:hover .image {
-      transform: scale(1.05);
-    }
-
-    .label-badge {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      padding: 6px 12px;
-      font-size: 11px;
-      font-weight: bold;
-      color: #ffffff;
-      background-color: #e02d2d;
-      z-index: 3;
-      border-radius: 4px;
-      line-height: 1.2;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .text-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 60px 20px 20px;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
-      color: #ffffff;
-      z-index: 2;
-    }
-
-    .overlay-title {
-      margin: 0 0 10px 0;
-      font-size: 20px;
-      font-weight: bold;
-      line-height: 1.5;
-      color: #ffffff;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .overlay-snippet {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.9);
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-  </style>
-</b:includable>
-      </b:widget>
+  <b:includable id='blogThisShare'/><b:includable id='bylineByName'/><b:includable id='bylineRegion'/><b:includable id='commentsLink'/><b:includable id='commentsLinkIframe'/><b:includable id='emailPostIcon'/><b:includable id='facebookShare'/><b:includable id='footerBylines'/><b:includable id='googlePlusShare'/><b:includable id='headerByline'/><b:includable id='linkShare'/><b:includable id='otherSharingButton'/><b:includable id='platformShare'/><b:includable id='postAuthor'/><b:includable id='postCommentsLink'/><b:includable id='postJumpLink'/><b:includable id='postLabels'/><b:includable id='postLocation'/><b:includable id='postReactions'/><b:includable id='postShareButtons'/><b:includable id='postSnippet'/><b:includable id='postTimestamp'/><b:includable id='sharingButton'/><b:includable id='sharingButtonContent'/><b:includable id='sharingButtons'/><b:includable id='sharingButtonsMenu'/><b:includable id='sharingPlatformIcon'/><b:includable id='snippetedPostByline'/><b:includable id='snippetedPostContent'/><b:includable id='snippetedPostThumbnail'/><b:includable id='snippetedPostTitle'/>
+</b:widget>
       <b:widget id='Blog1' locked='true' title='ブログの投稿' type='Blog' version='1'>
         <b:widget-settings>
           <b:widget-setting name='commentLabel'>comments</b:widget-setting>
