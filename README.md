@@ -4,7 +4,7 @@ QooQ をベースにカスタマイズした Blogger 用テンプレートです
 
 ---
 
-![BloggerテンプレートMTU](https://i.imgur.com/zOgGNyU.jpeg "BloggerテンプレートMTU")
+![BloggerテンプレートMTU](https://i.imgur.com/QtUJGjZ.jpeg "BloggerテンプレートMTU")
 
 ---
 
