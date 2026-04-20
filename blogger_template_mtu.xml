@@ -1831,7 +1831,7 @@ input.gsc-input {
 <div id='site-header-wrap'>
 <div id='header'>
     <b:section id='ヘッダー' maxwidgets='1' showaddelement='no'>
-      <b:widget id='Header1' locked='true' title='Blogger Template MTU (Header)' type='Header' version='1'>
+      <b:widget id='Header1' locked='true' title='Blogger Template TEST (Header)' type='Header' version='1'>
         <b:widget-settings>
           <b:widget-setting name='displayUrl'/>
           <b:widget-setting name='displayHeight'>0</b:widget-setting>
@@ -1936,18 +1936,47 @@ input.gsc-input {
     <div id='main-content'>
     <b:section id='記事表示部分' maxwidgets='2' showaddelement='yes'>
       <b:widget cond='data:view.isHomepage' id='FeaturedPost1' locked='false' title='注目の投稿' type='FeaturedPost' version='2' visible='true'>
-  <b:widget-settings>
-    <b:widget-setting name='showSnippet'>true</b:widget-setting>
-    <b:widget-setting name='showPostTitle'>true</b:widget-setting>
-    <b:widget-setting name='showFirstImage'>true</b:widget-setting>
-    <b:widget-setting name='useMostRecentPost'>true</b:widget-setting>
-  </b:widget-settings>
-
-  <b:includable id='main' var='this'>
+        <b:widget-settings>
+          <b:widget-setting name='showSnippet'>true</b:widget-setting>
+          <b:widget-setting name='showPostTitle'>true</b:widget-setting>
+          <b:widget-setting name='showFirstImage'>true</b:widget-setting>
+          <b:widget-setting name='useMostRecentPost'>true</b:widget-setting>
+        </b:widget-settings>
+        <b:includable id='main' var='this'>
     <b:include name='snippetedPosts'/>
   </b:includable>
-
-  <b:includable id='snippetedPosts'>
+        <b:includable id='blogThisShare'/>
+        <b:includable id='bylineByName'/>
+        <b:includable id='bylineRegion'/>
+        <b:includable id='commentsLink'/>
+        <b:includable id='commentsLinkIframe'/>
+        <b:includable id='emailPostIcon'/>
+        <b:includable id='facebookShare'/>
+        <b:includable id='footerBylines'/>
+        <b:includable id='googlePlusShare'/>
+        <b:includable id='headerByline'/>
+        <b:includable id='linkShare'/>
+        <b:includable id='otherSharingButton'/>
+        <b:includable id='platformShare'/>
+        <b:includable id='postAuthor'/>
+        <b:includable id='postCommentsLink'/>
+        <b:includable id='postJumpLink'/>
+        <b:includable id='postLabels'/>
+        <b:includable id='postLocation'/>
+        <b:includable id='postReactions'/>
+        <b:includable id='postShareButtons'/>
+        <b:includable id='postSnippet'/>
+        <b:includable id='postTimestamp'/>
+        <b:includable id='sharingButton'/>
+        <b:includable id='sharingButtonContent'/>
+        <b:includable id='sharingButtons'/>
+        <b:includable id='sharingButtonsMenu'/>
+        <b:includable id='sharingPlatformIcon'/>
+        <b:includable id='snippetedPostByline'/>
+        <b:includable id='snippetedPostContent'/>
+        <b:includable id='snippetedPostThumbnail'/>
+        <b:includable id='snippetedPostTitle'/>
+        <b:includable id='snippetedPosts'>
     <b:loop index='i' values='data:posts' var='post'>
       <div class='post-summary'>
         <a class='featured-post-link' expr:href='data:post.url'>
@@ -1955,7 +1984,7 @@ input.gsc-input {
             <span class='label-badge badge-left'>Featured Post</span>
 
             <b:if cond='data:post.labels'>
-              <b:with value='data:post.labels where(l => l.name not contains "#")' var='cleanLabels'>
+              <b:with value='data:post.labels where(l =&gt; l.name not contains &quot;#&quot;)' var='cleanLabels'>
                 <b:if cond='data:cleanLabels.any'>
                   <b:loop index='j' values='data:cleanLabels' var='label'>
                     <b:if cond='data:j == 0'>
@@ -1978,17 +2007,17 @@ input.gsc-input {
 
             <div class='feat-img'>
               <b:if cond='data:post.featuredImage'>
-                <img class='image' expr:alt='data:post.title.escaped' expr:src='resizeImage(data:post.featuredImage, 800, "16:9")'/>
+                <img class='image' expr:alt='data:post.title.escaped' expr:src='resizeImage(data:post.featuredImage, 800, &quot;16:9&quot;)'/>
               <b:else/>
                 <img class='image' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEivG-f3UvF6t9.../s1600/no-image.png'/>
               </b:if>
             </div>
 
             <div class='text-overlay'>
-              <b:if cond='data:post.title != ""'>
+              <b:if cond='data:post.title != &quot;&quot;'>
                 <h3 class='overlay-title'><data:post.title/></h3>
               </b:if>
-              <b:if cond='data:post.snippets.short != ""'>
+              <b:if cond='data:post.snippets.short != &quot;&quot;'>
                 <p class='overlay-snippet'>
                   <data:post.snippets.short/>
                 </p>
@@ -2037,34 +2066,31 @@ input.gsc-input {
       .overlay-snippet { margin: 0; font-size: 14px; line-height: 1.6; color: rgba(255, 255, 255, 0.9); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     </style>
   </b:includable>
-
-  <b:includable id='blogThisShare'/><b:includable id='bylineByName'/><b:includable id='bylineRegion'/><b:includable id='commentsLink'/><b:includable id='commentsLinkIframe'/><b:includable id='emailPostIcon'/><b:includable id='facebookShare'/><b:includable id='footerBylines'/><b:includable id='googlePlusShare'/><b:includable id='headerByline'/><b:includable id='linkShare'/><b:includable id='otherSharingButton'/><b:includable id='platformShare'/><b:includable id='postAuthor'/><b:includable id='postCommentsLink'/><b:includable id='postJumpLink'/><b:includable id='postLabels'/><b:includable id='postLocation'/><b:includable id='postReactions'/><b:includable id='postShareButtons'/><b:includable id='postSnippet'/><b:includable id='postTimestamp'/><b:includable id='sharingButton'/><b:includable id='sharingButtonContent'/><b:includable id='sharingButtons'/><b:includable id='sharingButtonsMenu'/><b:includable id='sharingPlatformIcon'/><b:includable id='snippetedPostByline'/><b:includable id='snippetedPostContent'/><b:includable id='snippetedPostThumbnail'/><b:includable id='snippetedPostTitle'/>
-</b:widget>
+      </b:widget>
       <b:widget id='Blog1' locked='true' title='ブログの投稿' type='Blog' version='1'>
         <b:widget-settings>
+          <b:widget-setting name='showDateHeader'>true</b:widget-setting>
           <b:widget-setting name='commentLabel'>comments</b:widget-setting>
+          <b:widget-setting name='style.textcolor'>#ffffff</b:widget-setting>
           <b:widget-setting name='showShareButtons'>true</b:widget-setting>
           <b:widget-setting name='authorLabel'>By</b:widget-setting>
+          <b:widget-setting name='showCommentLink'>true</b:widget-setting>
+          <b:widget-setting name='style.urlcolor'>#ffffff</b:widget-setting>
+          <b:widget-setting name='showAuthor'>false</b:widget-setting>
+          <b:widget-setting name='style.linkcolor'>#ffffff</b:widget-setting>
           <b:widget-setting name='style.unittype'>TextAndImage</b:widget-setting>
+          <b:widget-setting name='style.bgcolor'>#ffffff</b:widget-setting>
           <b:widget-setting name='timestampLabel'>-</b:widget-setting>
           <b:widget-setting name='reactionsLabel'/>
           <b:widget-setting name='showAuthorProfile'>false</b:widget-setting>
           <b:widget-setting name='style.layout'>1x1</b:widget-setting>
+          <b:widget-setting name='showLabels'>true</b:widget-setting>
           <b:widget-setting name='showLocation'>false</b:widget-setting>
+          <b:widget-setting name='postLabelsLabel'>カテゴリ</b:widget-setting>
           <b:widget-setting name='showTimestamp'>false</b:widget-setting>
           <b:widget-setting name='postsPerAd'>1</b:widget-setting>
-          <b:widget-setting name='style.bordercolor'>#ffffff</b:widget-setting>
-          <b:widget-setting name='showDateHeader'>true</b:widget-setting>
-          <b:widget-setting name='style.textcolor'>#ffffff</b:widget-setting>
-          <b:widget-setting name='showCommentLink'>true</b:widget-setting>
-          <b:widget-setting name='style.urlcolor'>#ffffff</b:widget-setting>
-          <b:widget-setting name='postLocationLabel'>Location:</b:widget-setting>
-          <b:widget-setting name='showAuthor'>false</b:widget-setting>
-          <b:widget-setting name='style.linkcolor'>#ffffff</b:widget-setting>
-          <b:widget-setting name='style.bgcolor'>#ffffff</b:widget-setting>
-          <b:widget-setting name='showLabels'>true</b:widget-setting>
-          <b:widget-setting name='postLabelsLabel'>カテゴリ</b:widget-setting>
           <b:widget-setting name='showBacklinks'>false</b:widget-setting>
+          <b:widget-setting name='style.bordercolor'>#ffffff</b:widget-setting>
           <b:widget-setting name='showInlineAds'>false</b:widget-setting>
           <b:widget-setting name='showReactions'>false</b:widget-setting>
         </b:widget-settings>
@@ -2656,7 +2682,7 @@ input.gsc-input {
         </span>
       <b:else/>
         <b:loop limit='1' values='data:posts' var='p'>
-          <b:loop values='data:p.labels where(l => l.name not contains "#")' var='label'>
+          <b:loop values='data:p.labels where(l =&gt; l.name not contains &quot;#&quot;)' var='label'>
             <span class='bc-item-unit'>
               <span class='bc-sep'> / </span>
               <span itemprop='itemListElement' itemscope='itemscope' itemtype='http://schema.org/ListItem'>
@@ -3322,7 +3348,7 @@ input.gsc-input {
   };
 
   // フィード取得ロジック
-  const blogUrl = "https://your-blog.blogspot.com";
+  const blogUrl = "★ブログURL";
   const maxResults = 3;
 
   window.renderAsPopular = function(json) {
@@ -3374,7 +3400,7 @@ input.gsc-input {
   <b:include name='quickedit'/>
 </b:includable>
       </b:widget>
-      <b:widget id='PopularPosts1' locked='false' title='人気の投稿 ※消さないでください' type='PopularPosts'>
+      <b:widget id='PopularPosts1' locked='false' title='人気の投稿 ※消さないでください' type='PopularPosts' version='1'>
         <b:widget-settings>
           <b:widget-setting name='numItemsToShow'>10</b:widget-setting>
           <b:widget-setting name='showThumbnails'>true</b:widget-setting>
