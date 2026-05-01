@@ -1683,15 +1683,15 @@ input.gsc-input {
 /****************************************
         ページネーション
 *****************************************/
-
 .pagination {
    display: flex;
    flex-wrap: wrap;
    justify-content: center;
+   align-items: center;
    gap: 6px;
    margin: 24px 0 16px;
 }
-.pagination-link {
+.pagination-link, .pagination-ellipsis {
    display: inline-flex;
    align-items: center;
    justify-content: center;
@@ -1706,7 +1706,12 @@ input.gsc-input {
    font-weight: bold;
    text-decoration: none;
    transition: background 0.2s, color 0.2s;
-   cursor: pointer;
+   box-sizing: border-box;
+}
+.pagination-ellipsis {
+   border: none;
+   background: transparent;
+   cursor: default;
 }
 .pagination-link:hover {
    background: $(brand.color);
@@ -1721,21 +1726,17 @@ input.gsc-input {
    pointer-events: none;
 }
 
-/* ページナビゲーション全体のコンテナ */
+/* 既存のPagerスタイルは維持 */
 #blog-pager {
   display: flex !important;
   width: 100% !important;
-  justify-content: flex-end !important; /* 基本を右寄せにする */
+  justify-content: flex-end !important;
   padding: 10px 0;
   clear: both;
 }
-
-/* もし「新しい投稿(newer)」が存在する場合のみ、左右に振り分ける */
 #blog-pager:has(.blog-pager-newer-link) {
   justify-content: space-between !important;
 }
-
-/* 念のため、古い投稿リンク自体のフロートを解除 */
 .blog-pager-older-link {
   float: none !important;
   display: inline-block !important;
@@ -1838,7 +1839,7 @@ input.gsc-input {
 <div id='site-header-wrap'>
 <div id='header'>
     <b:section id='ヘッダー' maxwidgets='1' showaddelement='no'>
-      <b:widget id='Header1' locked='true' title='Blogger Template TEST (Header)' type='Header' version='1'>
+      <b:widget id='Header1' locked='true' title='Blogger Template MTU (Header)' type='Header' version='1'>
         <b:widget-settings>
           <b:widget-setting name='displayUrl'/>
           <b:widget-setting name='displayHeight'>0</b:widget-setting>
@@ -1946,6 +1947,7 @@ input.gsc-input {
         <b:widget-settings>
           <b:widget-setting name='showSnippet'>true</b:widget-setting>
           <b:widget-setting name='showPostTitle'>true</b:widget-setting>
+          <b:widget-setting name='postId'>0</b:widget-setting>
           <b:widget-setting name='showFirstImage'>true</b:widget-setting>
           <b:widget-setting name='useMostRecentPost'>true</b:widget-setting>
         </b:widget-settings>
@@ -2076,28 +2078,29 @@ input.gsc-input {
       </b:widget>
       <b:widget id='Blog1' locked='true' title='ブログの投稿' type='Blog' version='1'>
         <b:widget-settings>
-          <b:widget-setting name='showDateHeader'>true</b:widget-setting>
           <b:widget-setting name='commentLabel'>comments</b:widget-setting>
-          <b:widget-setting name='style.textcolor'>#ffffff</b:widget-setting>
           <b:widget-setting name='showShareButtons'>true</b:widget-setting>
           <b:widget-setting name='authorLabel'>By</b:widget-setting>
-          <b:widget-setting name='showCommentLink'>true</b:widget-setting>
-          <b:widget-setting name='style.urlcolor'>#ffffff</b:widget-setting>
-          <b:widget-setting name='showAuthor'>false</b:widget-setting>
-          <b:widget-setting name='style.linkcolor'>#ffffff</b:widget-setting>
           <b:widget-setting name='style.unittype'>TextAndImage</b:widget-setting>
-          <b:widget-setting name='style.bgcolor'>#ffffff</b:widget-setting>
           <b:widget-setting name='timestampLabel'>-</b:widget-setting>
           <b:widget-setting name='reactionsLabel'/>
           <b:widget-setting name='showAuthorProfile'>false</b:widget-setting>
           <b:widget-setting name='style.layout'>1x1</b:widget-setting>
-          <b:widget-setting name='showLabels'>true</b:widget-setting>
           <b:widget-setting name='showLocation'>false</b:widget-setting>
-          <b:widget-setting name='postLabelsLabel'>カテゴリ</b:widget-setting>
           <b:widget-setting name='showTimestamp'>false</b:widget-setting>
           <b:widget-setting name='postsPerAd'>1</b:widget-setting>
-          <b:widget-setting name='showBacklinks'>false</b:widget-setting>
           <b:widget-setting name='style.bordercolor'>#ffffff</b:widget-setting>
+          <b:widget-setting name='showDateHeader'>true</b:widget-setting>
+          <b:widget-setting name='style.textcolor'>#ffffff</b:widget-setting>
+          <b:widget-setting name='showCommentLink'>true</b:widget-setting>
+          <b:widget-setting name='style.urlcolor'>#ffffff</b:widget-setting>
+          <b:widget-setting name='postLocationLabel'>Location:</b:widget-setting>
+          <b:widget-setting name='showAuthor'>false</b:widget-setting>
+          <b:widget-setting name='style.linkcolor'>#ffffff</b:widget-setting>
+          <b:widget-setting name='style.bgcolor'>#ffffff</b:widget-setting>
+          <b:widget-setting name='showLabels'>true</b:widget-setting>
+          <b:widget-setting name='postLabelsLabel'>カテゴリ</b:widget-setting>
+          <b:widget-setting name='showBacklinks'>false</b:widget-setting>
           <b:widget-setting name='showInlineAds'>false</b:widget-setting>
           <b:widget-setting name='showReactions'>false</b:widget-setting>
         </b:widget-settings>
@@ -2730,7 +2733,7 @@ input.gsc-input {
   </b:if>
 </b:includable>
         <b:includable id='nextprev'>
-  <b:if cond='data:blog.pageType in {&quot;index&quot;, &quot;archive&quot;, &quot;label&quot;, &quot;search&quot;}'>
+  <b:if cond='data:blog.pageType in {&quot;index&quot;, &quot;label&quot;, &quot;search&quot;}'>
     <style>
       #list .list-item:nth-child(n+5) { display: none; }
     </style>
@@ -2753,25 +2756,17 @@ input.gsc-input {
   setupPagination();
 
   function setupPagination() {
-    let currentPath = window.location.pathname;
     let base = blogUrl.replace(/\/$/, "");
     let feedUrl = base + '/feeds/posts/summary';
     
-    let archiveMatch = currentPath.match(/\/(\d{4})\/(\d{2})\//);
-    let isArchive = !!archiveMatch;
-
-    if (isArchive) {
-      let year = archiveMatch[1];
-      let month = archiveMatch[2];
-      let lastDay = new Date(year, month, 0).getDate();
-      feedUrl += '?published-min=' + year + '-' + month + '-01T00:00:00';
-      feedUrl += '&published-max=' + year + '-' + month + '-' + lastDay + 'T23:59:59';
-    } else if (label) {
+    // ラベル検索時
+    if (label) {
       feedUrl += '/-/' + encodeURIComponent(label);
     }
     
     feedUrl += (feedUrl.indexOf('?') <= -1 ? '?' : '&') + 'alt=json&max-results=1';
 
+    // 検索クエリがある場合
     if (query) {
       feedUrl = base + '/feeds/posts/summary?alt=json&max-results=99&q=' + encodeURIComponent(query);
     }
@@ -2790,67 +2785,57 @@ input.gsc-input {
 
         if (totalResults > maxResults) {
           let pagerHtml = '';
+          const delta = 2; // 現在のページの前後に表示する数
+
           for (let i = 1; i <= totalPages; i++) {
-            if (i === currentPage) {
-              pagerHtml += '<span class="pagination-link current-page">' + i + '</span>';
-            } else {
-              pagerHtml += '<a class="pagination-link" id="Page-' + i + '" href="#">' + i + '</a>';
+            // 省略ロジック: 1ページ目、最後、現在のページ周辺以外を飛ばす
+            if (i === 1 || i === totalPages || (i >= currentPage - delta && i <= currentPage + delta)) {
+              if (i === currentPage) {
+                pagerHtml += '<span class="pagination-link current-page">' + i + '</span>';
+              } else {
+                pagerHtml += '<a class="pagination-link" id="Page-' + i + '" href="#">' + i + '</a>';
+              }
+            } else if (i === currentPage - delta - 1 || i === currentPage + delta + 1) {
+              pagerHtml += '<span class="pagination-ellipsis">...</span>';
             }
           }
+
           const pagerElem = document.querySelector(selector);
           if (pagerElem) {
             pagerElem.innerHTML = pagerHtml;
+            // 非同期でURLを設定
             for (let i = 1; i <= totalPages; i++) {
               if (i === currentPage) continue;
-              setPageUrl(i, isArchive, archiveMatch);
+              const link = document.querySelector(selector + ' #Page-' + i);
+              if (link) setPageUrl(i);
             }
           }
         }
       });
   }
 
-  function setPageUrl(targetPage, isArchive, archiveMatch) {
+  function setPageUrl(targetPage) {
     let base = blogUrl.replace(/\/$/, "");
-    let currentPath = window.location.pathname;
-
     if (targetPage === 1) {
-      let firstPageHref = isArchive ? (base + currentPath) : (base + '/search' + (label != '' ? '/label/' + encodeURIComponent(label) : ''));
+      let firstPageHref = base + (label != '' ? '/search/label/' + encodeURIComponent(label) : '/search');
       firstPageHref += (firstPageHref.indexOf('?') <= -1 ? '?' : '&') + 'max-results=' + maxResults + '#Page-1';
-      
       const firstPageLink = document.querySelector(selector + ' #Page-1');
       if (firstPageLink) firstPageLink.href = firstPageHref;
       return; 
     }
 
     let startIndex = (targetPage - 1) * maxResults;
-    if (startIndex <= 0) startIndex = 1;
     let feedUrl = base + "/feeds/posts/summary";
-
-    if (isArchive) {
-      let year = archiveMatch[1];
-      let month = archiveMatch[2];
-      let lastDay = new Date(year, month, 0).getDate();
-      feedUrl += '?published-min=' + year + '-' + month + '-01T00:00:00';
-      feedUrl += '&published-max=' + year + '-' + month + '-' + lastDay + 'T23:59:59';
-    } else if (label != '') {
-      feedUrl += '/-/' + encodeURIComponent(label);
-    }
-    feedUrl += (feedUrl.indexOf('?') <= -1 ? '?' : '&') + 'alt=json&orderby=published&start-index=' + startIndex + '&max-results=1';
+    if (label != '') feedUrl += '/-/' + encodeURIComponent(label);
+    feedUrl += (feedUrl.indexOf('?') <= -1 ? '?' : '&') + 'alt=json&orderby=published&start-index=' + (startIndex + 1) + '&max-results=1';
 
     fetch(feedUrl)
       .then((response) => response.json())
       .then((json) => {
         if (!json.feed || !json.feed.entry) return;
         const date = encodeDate(json.feed.entry[0].published.$t);
-
-        // 【修正箇所】アーカイブ時も /search をベースにする
-        let hrefBase = base + '/search';
-        if (label != '') {
-          hrefBase += '/label/' + encodeURIComponent(label);
-        }
-
+        let hrefBase = base + '/search' + (label != '' ? '/label/' + encodeURIComponent(label) : '');
         let finalHref = hrefBase + (hrefBase.indexOf('?') <= -1 ? '?' : '&') + 'updated-max=' + date + '&max-results=' + maxResults + '&start=' + startIndex + '&by-date=false#Page-' + targetPage;
-
         const liElem = document.querySelector(selector + ' #Page-' + targetPage);
         if (liElem) liElem.href = finalHref;
       });
@@ -2863,7 +2848,9 @@ input.gsc-input {
   //]]>
 </script>
   </b:if>
-  <b:if cond='data:blog.pageType == &quot;item&quot;'>
+  
+  <!-- 記事詳細&#12289;およびアーカイブページではこちらを表示 -->
+  <b:if cond='data:blog.pageType == &quot;item&quot; || data:blog.pageType == &quot;archive&quot;'>
     <div class='blog-pager' id='blog-pager'>
       <b:if cond='data:newerPageUrl'>
         <span id='blog-pager-newer-link'>
@@ -2878,7 +2865,7 @@ input.gsc-input {
     </div>
   </b:if>
   <div class='clear'/>
-        </b:includable>
+</b:includable>
         <b:includable id='post' var='post'>
 <article class='list-item'>
     <b:if cond='data:post.dateHeader'>
@@ -3264,156 +3251,311 @@ input.gsc-input {
         <b:widget-settings>
           <b:widget-setting name='content'><![CDATA[<div class="lava-lamp-wrapper">
   <div class="custom-tabs-container">
+
+    <!-- タブ -->
     <div class="tab-buttons">
       <span class="content1">人気記事</span>
       <span class="content2">新着記事</span>
       <div class="lamp"></div>
     </div>
 
+    <!-- 中身 -->
     <div class="tab-content">
+
+      <!-- 人気記事 -->
       <div class="content1">
-        <div class='widget-content popular-posts'>
-          <ul id='recent-as-popular-content'>
-            <div style="text-align:center; padding:20px;">読み込み中...</div>
-          </ul>
-        </div>
+        <ul id="popular-posts-custom">
+          <li class="loading">読み込み中...</li>
+        </ul>
       </div>
 
+      <!-- 新着記事 -->
       <div class="content2">
-        <div id='recent-posts-container'>
-          <div class='recent-posts-loading'>読み込み中...</div>
-        </div>
+        <ul id="recent-posts-container">
+          <li class="loading">読み込み中...</li>
+        </ul>
       </div>
+
     </div>
   </div>
 </div>
 
-<style type='text/css'>
-/* 1. レイアウトと余白の統一 */
-.popular-posts ul, #recent-posts-container { 
-  list-style: none; 
-  margin: 0; 
-  padding: 7.5px; /* 全体の内側余白を15pxで統一 */
+<style>
+/* ===== 全体余白 ===== */
+.popular-posts ul,
+#popular-posts-custom,
+#recent-posts-container {
+  list-style: none;
+  margin: 0;
+  padding: 10px;
 }
 
-/* 2. リストアイテムの縦並びを統一 */
-.popular-posts li, .recent-post-item { 
-  display: flex !important;
+/* ===== アイテム ===== */
+.popular-posts li,
+#popular-posts-custom li,
+#recent-posts-container li {
+  display: flex;
   align-items: flex-start;
-  padding: 10px 0; 
-  border-bottom: 1px solid #eeeeee; 
-  list-style: none !important;
+  padding: 12px 0;
+  border-bottom: 1px solid #eeeeee;
+  list-style: none;
   clear: both;
+  position: relative;
 }
-.popular-posts li:last-child, .recent-post-item:last-child { border-bottom: none; }
+.popular-posts li:last-child,
+#popular-posts-custom li:last-child,
+#recent-posts-container li:last-child {
+  border-bottom: none;
+}
 
-/* 3. サムネイルのサイズと形状を統一 */
-.item-thumbnail img, .recent-post-thumb { 
-  width: 72px !important; 
-  height: 72px !important; 
-  object-fit: cover; 
-  border-radius: 4px; 
-  margin-right: 12px;
+/* ===== サムネ ===== */
+.item-thumbnail img,
+.recent-post-thumb {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 14px;
   display: block;
   flex-shrink: 0;
 }
 
-/* 4. タイトルのスタイルを統一 */
-.item-title, .recent-post-info { flex: 1; }
-.item-title, .recent-post-title {
-  font-size: 14px; 
-  font-weight: 700; 
-  line-height: 1.4; 
+/* サムネを基準にする */
+.item-thumbnail {
+  position: relative;
+}
+
+/* ランキングを前面に */
+#popular-posts-custom li::before {
+  z-index: 2;          /* ← これ追加（最重要） */
+}
+
+/* サムネを一段下げる */
+.item-thumbnail img {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== テキスト ===== */
+.item-title,
+.recent-post-info {
+  flex: 1;
+}
+
+.item-title,
+.recent-post-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
   margin: 0;
 }
-.item-title a, .recent-post-title a { color: #555555; text-decoration: none; transition: 0.2s; }
-.item-title a:hover, .recent-post-title a:hover { color: rgba(15, 43, 70, 0.7); }
 
-/* --- タブのデザイン --- */
-.lava-lamp-wrapper .tab-buttons { display: flex; background: #eee; position: relative; border-bottom: 2px solid #ddd; }
-.lava-lamp-wrapper .tab-buttons span { flex: 1; font: 700 14px sans-serif; color: #555; cursor: pointer; text-align: center; height: 40px; line-height: 40px; z-index: 2; }
-.lava-lamp-wrapper .lamp { width: 50%; height: 2px; background: #333; position: absolute; bottom: -2px; left: 0; transition: all 0.3s ease-out; z-index: 3; }
+/* 2行制限（これが今回の要件） */
+.item-title a,
+.recent-post-title a {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  color: #555;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.item-title a:hover,
+.recent-post-title a:hover {
+  color: rgba(15, 43, 70, 0.7);
+}
+
+/* ===== ランキング ===== */
+#popular-posts-custom {
+  counter-reset: rank-counter;
+}
+
+#popular-posts-custom li {
+  counter-increment: rank-counter;
+}
+
+#popular-posts-custom li::before {
+  content: counter(rank-counter);
+  position: absolute;
+  top: 10px;
+  left: -2px;
+
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 10px;
+  font-weight: bold;
+
+  background: #999;
+  color: #fff;
+}
+
+/* 上位3つ */
+#popular-posts-custom li:nth-child(1)::before { background: #E6B422; }
+#popular-posts-custom li:nth-child(2)::before { background: #B4B4B4; }
+#popular-posts-custom li:nth-child(3)::before { background: #AD7D4C; }
+
+/* バッジ分余白 */
+#popular-posts-custom .item-thumbnail {
+  margin-left: 6px;
+}
+
+/* ===== タブ ===== */
+.lava-lamp-wrapper .tab-buttons {
+  display: flex;
+  background: #eee;
+  position: relative;
+  border-bottom: 2px solid #ddd;
+}
+.lava-lamp-wrapper .tab-buttons span {
+  flex: 1;
+  font: 700 14px sans-serif;
+  color: #555;
+  cursor: pointer;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  z-index: 2;
+}
+.lava-lamp-wrapper .lamp {
+  width: 50%;
+  height: 2px;
+  background: #333;
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  transition: all 0.3s ease-out;
+  z-index: 3;
+}
 .lava-lamp-wrapper .tab-content > div { display: none; }
 .lava-lamp-wrapper .tab-content > div.content1 { display: block; }
+
+/* ローディング */
+.loading {
+  text-align: center;
+  padding: 20px;
+}
 </style>
 
-<script type='text/javascript'>
+<script>
 //<![CDATA[
 (function() {
-  // タブ切り替えロジック
+
+  /* タブ */
   const btn1 = document.querySelector('.tab-buttons .content1');
   const btn2 = document.querySelector('.tab-buttons .content2');
   const pane1 = document.querySelector('.tab-content .content1');
   const pane2 = document.querySelector('.tab-content .content2');
   const lamp = document.querySelector('.lamp');
 
-  btn1.onclick = function() {
+  btn1.onclick = () => {
     pane1.style.display = 'block';
     pane2.style.display = 'none';
     lamp.style.left = '0';
   };
-  btn2.onclick = function() {
+
+  btn2.onclick = () => {
     pane1.style.display = 'none';
     pane2.style.display = 'block';
     lamp.style.left = '50%';
   };
 
-  // フィード取得ロジック
-  const blogUrl = "★ブログURL";
-  const maxResults = 3;
+  /* ===== 人気記事（DOMコピー） ===== */
+  window.addEventListener('load', function() {
+    const origin = document.querySelector('.PopularPosts');
+    if (!origin) return;
 
-  window.renderAsPopular = function(json) {
-    const container = document.getElementById('recent-as-popular-content');
-    if (!json.feed.entry) { container.innerHTML = "記事なし"; return; }
-    let html = "";
-    json.feed.entry.forEach(entry => {
-      let title = entry.title.$t;
-      let link = entry.link.find(l => l.rel === 'alternate').href;
-      let thumbUrl = entry.media$thumbnail ? entry.media$thumbnail.url.replace(/\/s[0-9]+.*?\//, '/s72-c/') : "https://placehold.jp/72x72.png?text=NoImage";
-      html += `<li><div class="item-thumbnail"><a href="${link}"><img src="${thumbUrl}"></a></div><div class="item-title"><a href="${link}">${title}</a></div></li>`;
+    const items = origin.querySelectorAll('li');
+    let html = '';
+
+    items.forEach(item => {
+      const link = item.querySelector('a');
+      const img = item.querySelector('img');
+      const title = item.querySelector('.item-title')?.textContent.trim() || '';
+
+      const href = link.href;
+      const thumb = img ? img.src : 'https://placehold.jp/72x72.png';
+
+      html += `
+        <li>
+          <div class="item-thumbnail">
+            <a href="${href}">
+              <img src="${thumb}">
+            </a>
+          </div>
+          <div class="item-title">
+            <a href="${href}">${title}</a>
+          </div>
+        </li>
+      `;
     });
-    container.innerHTML = html;
-  };
 
+    document.getElementById('popular-posts-custom').innerHTML = html;
+    origin.style.display = 'none';
+  });
+
+  /* ===== 新着記事 ===== */
   window.renderRecentPosts = function(json) {
     const container = document.getElementById('recent-posts-container');
-    if (!json.feed.entry) { container.innerHTML = "記事なし"; return; }
-    let html = "";
+
+    if (!json.feed.entry) {
+      container.innerHTML = "<li class='loading'>記事なし</li>";
+      return;
+    }
+
+    let html = '';
+
     json.feed.entry.forEach(entry => {
-      let title = entry.title.$t;
-      let link = entry.link.find(l => l.rel === 'alternate').href;
-      let thumbUrl = entry.media$thumbnail ? entry.media$thumbnail.url.replace(/\/s[0-9]+.*?\//, '/s72-c/') : "https://placehold.jp/72x72.png?text=NoImage";
-      html += `<div class="recent-post-item"><img class="recent-post-thumb" src="${thumbUrl}"><div class="recent-post-info"><h3 class="recent-post-title"><a href="${link}">${title}</a></h3></div></div>`;
+      const title = entry.title.$t;
+      const link = entry.link.find(l => l.rel === 'alternate').href;
+      const thumb = entry.media$thumbnail
+        ? entry.media$thumbnail.url.replace(/\/s[0-9]+.*?\//, '/s72-c/')
+        : 'https://placehold.jp/72x72.png';
+
+      html += `
+        <li>
+          <div class="item-thumbnail">
+            <a href="${link}">
+              <img class="recent-post-thumb" src="${thumb}">
+            </a>
+          </div>
+          <div class="recent-post-info">
+            <div class="recent-post-title">
+              <a href="${link}">${title}</a>
+            </div>
+          </div>
+        </li>
+      `;
     });
+
     container.innerHTML = html;
   };
 
-  const s1 = document.createElement('script');
-  s1.src = `${blogUrl}/feeds/posts/default?alt=json-in-script&callback=renderAsPopular&max-results=${maxResults}`;
-  document.body.appendChild(s1);
+  const s = document.createElement('script');
+  s.src = `/feeds/posts/default?alt=json-in-script&callback=renderRecentPosts&max-results=3`;
+  document.body.appendChild(s);
 
-  const s2 = document.createElement('script');
-  s2.src = `${blogUrl}/feeds/posts/default?alt=json-in-script&callback=renderRecentPosts&max-results=${maxResults}`;
-  document.body.appendChild(s2);
 })();
-//]]]]><![CDATA[>
 </script>]]></b:widget-setting>
         </b:widget-settings>
         <b:includable id='main'>
-  <!-- only display title if it's non-empty -->
-  <b:if cond='data:title != &quot;&quot;'>
-    <h2 class='title'><i class='fa-solid fa-newspaper'/> <data:title/></h2>
-  </b:if>
-  <div class='widget-content'>
-    <data:content/>
-  </div>
-
-  <b:include name='quickedit'/>
-</b:includable>
+    <h2 class='title'><data:title/></h2>
+    <div class='widget-content'>
+      <data:content/>
+    </div>
+  </b:includable>
       </b:widget>
-      <b:widget id='PopularPosts1' locked='false' title='人気の投稿 ※消さないでください' type='PopularPosts' version='1'>
+      <b:widget id='PopularPosts1' locked='false' title='人気の投稿 ※消さないでください' type='PopularPosts'>
         <b:widget-settings>
-          <b:widget-setting name='numItemsToShow'>10</b:widget-setting>
+          <b:widget-setting name='numItemsToShow'>3</b:widget-setting>
           <b:widget-setting name='showThumbnails'>true</b:widget-setting>
           <b:widget-setting name='showSnippets'>false</b:widget-setting>
           <b:widget-setting name='timeRange'>LAST_YEAR</b:widget-setting>
@@ -3808,6 +3950,7 @@ input.gsc-input {
          <b:widget-setting name='shownum'>4</b:widget-setting>
          <b:widget-setting name='link-3'>#</b:widget-setting>
          <b:widget-setting name='sorting'>NONE</b:widget-setting>
+         <b:widget-setting name='link-4'>https://instagram.com/probloggertemplates # Instagram</b:widget-setting>
          <b:widget-setting name='text-1'>PRIVACY POLICY</b:widget-setting>
          <b:widget-setting name='link-1'>#</b:widget-setting>
          <b:widget-setting name='text-0'>ABOUT ME</b:widget-setting>
@@ -3815,10 +3958,11 @@ input.gsc-input {
          <b:widget-setting name='text-3'>SITE MAP</b:widget-setting>
          <b:widget-setting name='link-0'>#</b:widget-setting>
          <b:widget-setting name='text-2'>CONTACT</b:widget-setting>
+         <b:widget-setting name='text-4'>instagram</b:widget-setting>
        </b:widget-settings>
        <b:includable id='main'>
 
-<b:if cond='data:title != &quot;&quot;'><h2><data:title/></h2></b:if>
+
 <div class='widget-content'>
 <div class='widget-content footer-nav-container'>
   <ul class='footer-nav-list'>
