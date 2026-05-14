@@ -3215,7 +3215,7 @@ input.gsc-input {
           <b:widget-setting name='content'><![CDATA[<style>
 #matsu-profile-container { display:flex; justify-content:center; font-family:sans-serif; }
 #matsu-profile-container .profile-card { background:#ffffff; border-radius:6px; text-align:center;width: 100%; }
-#matsu-profile-container .cover-area { position:relative; background:#cccccc center/cover url('★カバー画像URL'); height:180px; border-radius:6px 6px 0 0; }
+#matsu-profile-container .cover-area { position:relative; background:#cccccc center/cover url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEig5zUsMlZr1chy1oAI6cgE6YtR6LkJ0O8k6RTtR8Z80MKPAKbfQayucyzWq7I1_szZCAL0KR0LiV3HkPfV6nKWiFWiXK4BWw7C_JTikOEpw-OoUCk8MbnOZ4PJKHLr9hDHnSiPoyQ11yWuDA9DRIqKHi-X7-ep6rtQ5e5Oul70WvqVAYPfiWuKC4QzirU/s320/unnamed%20%2823%29.jpg'); height:180px; border-radius:6px 6px 0 0; }
 #matsu-profile-container .avatar-img { position:absolute; width:120px; height:120px; object-fit:cover; bottom:-60px; left:15px; border-radius:50%; border:4px solid #ffffff; background:#ffffff; }
 #matsu-profile-container .name { font-size:19px; margin:25px 5px 0 145px; color:#222; text-align:left; font-weight:700; }
 #matsu-profile-container .description { margin-top:50px; line-height:1.6; font-size:14px; }
@@ -3225,10 +3225,10 @@ input.gsc-input {
 </style><div id="matsu-profile-container">
     <div class="profile-card">
         <div class="cover-area">
-            <img class="avatar-img" src="https://placehold.jp/120x120.png?text=Avatar" /* ★アバター画像urlをここに設定してください */ />
+            <img class="avatar-img" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiXpw-ARublco4YDBdJfYNbNPjH6aaLDPhNXq0PsTzB_HaCG8iveke4UJNPj7ic5QmAcavWYCBgekeOOo1i9_yP9T4j3wsq8gNZiLtRI01iv9UZnVCp-jnrccQoBEbVDS2uyjv-_q_8zddqM-MwWCy33gVivPolD1lZbGJ6VEyb__mSIHe-K6EiTEN4xS0/w200-h200/Kc57tD9d4zc8XzK1773302327_1773302338.png" /* ★アバター画像urlをここに設定してください */ />
         </div>
-        <div class="name">名前</div>
-        <p class="description">ここに自己紹介文を入力</p>
+        <div class="name">matsusan</div>
+        <p class="description">Blogger Template MTUのデモサイトです</p>
         <div class="social-icons">
             <a href="#" target="_blank"><i class="fa-brands fa-twitter"></i></a><a href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a><a href="#" target="_blank"><i class="fa-brands fa-tiktok"></i></a><a href="#" target="_blank"><i class="fa-brands fa-youtube"></i></a>
         </div>
@@ -3553,7 +3553,7 @@ input.gsc-input {
     </div>
   </b:includable>
       </b:widget>
-      <b:widget id='PopularPosts1' locked='false' title='人気の投稿 ※消さないでください' type='PopularPosts'>
+      <b:widget id='PopularPosts1' locked='false' title='人気の投稿 ※消さないでください' type='PopularPosts' version='1'>
         <b:widget-settings>
           <b:widget-setting name='numItemsToShow'>3</b:widget-setting>
           <b:widget-setting name='showThumbnails'>true</b:widget-setting>
@@ -4302,19 +4302,26 @@ $("a.blog-pager-older-link").html(olderLinkTitle + " <i class='fas fa-angle-doub
         }
       }
 
-      function smoothScroll(a) {
-        a.addEventListener('click', (e) => {
-          e.preventDefault();
-          let href = a.getAttribute('href');
-          let targetElement = document.getElementById(href.replace('#', ''));
-          if(targetElement){
-            const rect = targetElement.getBoundingClientRect().top;
-            const offset = window.pageYOffset;
-            const target = rect + offset - 0;
-            window.scrollTo({ top: target, behavior: 'smooth', });
-          }
-        });
-      }
+	function smoothScroll(a) {
+  	a.addEventListener('click', (e) => {
+    	e.preventDefault();
+    	let href = a.getAttribute('href');
+    	let id = href.replace('#', '');
+    	// querySelector で # エスケープも考慮して検索
+    	let targetElement = document.getElementById(id)
+      	|| document.querySelector('[id="' + id + '"]');
+    	if (targetElement) {
+      	const headerOffset = 60; // 固定ヘッダーがある場合はその高さに合わせる
+      	const rect = targetElement.getBoundingClientRect().top;
+     	 const offset = window.pageYOffset;
+     	 const target = rect + offset - headerOffset;
+     	 window.scrollTo({ top: target, behavior: 'smooth' });
+    	} else {
+     	 // フォールバック：ネイティブのアンカージャンプ
+      	location.href = href;
+    	}
+    });
+	}
 
       function createItem(tagName, text, nestLevel, id) {
         return { tagName: tagName, text: text, children: [], nestLevel: nestLevel, id: id};
