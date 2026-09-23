@@ -11,6 +11,7 @@
         var path = location.pathname;
         var search = location.search;
         if (/^\/\d{4}\/(\d{2}\/)?/.test(path) && search.indexOf('max-results=') === -1) {
+          document.documentElement.style.display = 'none';
           var sep = search ? '&' : '?';
           location.replace(path + search + sep + 'max-results=' + maxResults + '&type=archive');
         }
@@ -2776,8 +2777,9 @@ input.gsc-input {
     const isArchive = archivePath !== "" || typeParam === 'archive';
 
     if (archiveMatch && currentSearch.indexOf('max-results=') === -1) {
+      document.documentElement.style.display = 'none';
       const sep = currentSearch ? '&' : '?';
-      location.href = path + currentSearch + sep + 'max-results=' + maxResults + '&type=archive';
+      location.replace(path + currentSearch + sep + 'max-results=' + maxResults + '&type=archive');
       return;
     }
 
