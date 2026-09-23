@@ -7,7 +7,7 @@
     <script type='text/javascript'>
       //<![CDATA[
       (function() {
-        var maxResults = 4;
+        var maxResults = 4; // 件数変更 : アーカイブ一覧の件数を設定してください
         var path = location.pathname;
         var search = location.search;
         if (/^\/\d{4}\/(\d{2}\/)?/.test(path) && search.indexOf('max-results=') === -1) {
