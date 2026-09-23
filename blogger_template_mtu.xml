@@ -2740,7 +2740,7 @@ input.gsc-input {
         <b:includable id='nextprev'>
   <b:if cond='data:blog.pageType in {&quot;index&quot;, &quot;label&quot;, &quot;search&quot;, &quot;archive&quot;}'>
     <style>
-      #list .list-item:nth-child(n+5) { display: none; }
+      #list .list-item:nth-child(n+5) { display: none; } /* アーカイブ一覧表示件数設定 */
     </style>
     <script type='text/javascript'>
       if (location.href.indexOf(&#39;updated-max&#39;) !== -1 || location.href.indexOf(&#39;#Page-&#39;) !== -1) {
