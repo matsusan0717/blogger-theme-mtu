@@ -4569,7 +4569,6 @@ jQuery(document).ready(function($){
       if ((validLabel && isHash) || foundOne) {
         unit.parentNode.removeChild(unit);
       } 
-      // C. それ以外（「最初の正しいラベル」または「#しかない時の最初の#」） → 残す
       else {
         foundOne = true;
         const sep = unit.querySelector('.bc-sep');
@@ -4593,7 +4592,7 @@ jQuery(document).ready(function($){
    * false = 標準（最新を展開）のまま
    */
   const CONFIG_COLLAPSE_INIT = true; 
-  let isFirstRun = true; // 初回実行判定フラグ
+  let isFirstRun = true; 
 
   const updateArchive = () => {
     const archiveList = document.getElementById('BlogArchive1_ArchiveList');
@@ -4620,7 +4619,7 @@ jQuery(document).ready(function($){
           zippy.innerHTML = '&#9658;&nbsp;'; // ►
         }
       });
-      isFirstRun = false; // 二回目以降（クリック時など）はこのブロックを通さない
+      isFirstRun = false; 
     }
   };
 
@@ -4630,7 +4629,6 @@ jQuery(document).ready(function($){
   document.addEventListener('click', (e) => {
     const toggle = e.target.closest('.toggle');
     if (toggle) {
-      // ユーザーのクリックによる展開を邪魔しないよう、少し遅らせて文字だけ整える
       setTimeout(() => {
         isFirstRun = false; 
         updateArchive();
