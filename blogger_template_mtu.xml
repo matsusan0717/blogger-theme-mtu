@@ -2959,7 +2959,9 @@ input.gsc-input {
 
       let feedUrl = base + "/feeds/posts/summary";
       if (label != '') feedUrl += '/-/' + encodeURIComponent(label);
-      feedUrl += (feedUrl.indexOf('?') <= -1 ? '?' : '&') + 'alt=json&orderby=published&start-index=' + (startIndex + 1) + '&max-results=1';
+      // updated-max は「その日時より古い記事」を返す(その記事自身は含まない)ため、
+      // 対象ページの1件目ではなく「直前ページの最後の記事」(startIndex 番目)の日時を基準にする
+      feedUrl += (feedUrl.indexOf('?') <= -1 ? '?' : '&') + 'alt=json&orderby=published&start-index=' + startIndex + '&max-results=1';
 
       fetch(feedUrl)
         .then((response) => response.json())
