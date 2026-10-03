@@ -963,6 +963,7 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
 #single-content {
    margin-top: 1em;
    line-height: 1.8;
+	margin-bottom:3rem;
 }
 #single-content p {
    margin-top: 1.8em;
