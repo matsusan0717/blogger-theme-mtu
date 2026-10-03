@@ -1193,22 +1193,24 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
    word-wrap: break-word;
    /* 中央で折り返し */
 }
-/* 次のタイトル（左側） */
+/* 古い記事（左側） */
 
-#blog-pager-newer-link {
+#blog-pager-older-link {
    text-align: left;
+   margin-right: auto;
 }
-#blog-pager-newer-link i {
+#blog-pager-older-link i {
    margin-right: 8px;
    margin-top: 3px;
 }
-/* 前のタイトル（右側） */
+/* 新しい記事（右側） */
 
-#blog-pager-older-link {
+#blog-pager-newer-link {
    text-align: right;
    justify-content: flex-end;
+   margin-left: auto;
 }
-#blog-pager-older-link i {
+#blog-pager-newer-link i {
    margin-left: 8px;
    margin-top: 3px;
 }
@@ -1751,7 +1753,7 @@ input.gsc-input {
 #blog-pager {
   display: flex !important;
   width: 100% !important;
-  justify-content: flex-end !important;
+  justify-content: flex-start !important;
   padding: 10px 0;
   clear: both;
 }
@@ -2987,14 +2989,14 @@ input.gsc-input {
   <!-- 記事詳細ページではこちらを表示(アーカイブは上の独自ページャーに統一) -->
   <b:if cond='data:blog.pageType == &quot;item&quot;'>
     <div class='blog-pager' id='blog-pager'>
-      <b:if cond='data:newerPageUrl'>
-        <span id='blog-pager-newer-link'>
-        <a class='blog-pager-newer-link' expr:href='data:newerPageUrl' expr:id='data:widget.instanceId + &quot;_blog-pager-newer-link&quot;' expr:title='data:newerPageTitle'><data:newerPageTitle/></a>
-        </span>
-      </b:if>
       <b:if cond='data:olderPageUrl'>
         <span id='blog-pager-older-link'>
         <a class='blog-pager-older-link' expr:href='data:olderPageUrl' expr:id='data:widget.instanceId + &quot;_blog-pager-older-link&quot;' expr:title='data:olderPageTitle'><data:olderPageTitle/></a>
+        </span>
+      </b:if>
+      <b:if cond='data:newerPageUrl'>
+        <span id='blog-pager-newer-link'>
+        <a class='blog-pager-newer-link' expr:href='data:newerPageUrl' expr:id='data:widget.instanceId + &quot;_blog-pager-newer-link&quot;' expr:title='data:newerPageTitle'><data:newerPageTitle/></a>
         </span>
       </b:if>
     </div>
@@ -4147,12 +4149,12 @@ $(document).ready(function(){
 var newerLink = $("a.blog-pager-newer-link").attr("href"); 
 $("a.blog-pager-newer-link").load(newerLink+" #single-header-title:first", function() { 
 var newerLinkTitle = $("a.blog-pager-newer-link").text(); 
-$("a.blog-pager-newer-link").html("<i class='fas fa-angle-double-left'></i> " + newerLinkTitle); 
+$("a.blog-pager-newer-link").html(newerLinkTitle + " <i class='fas fa-angle-double-right'></i>"); 
 }); 
 var olderLink = $("a.blog-pager-older-link").attr("href"); 
 $("a.blog-pager-older-link").load(olderLink+" #single-header-title:first", function() { 
 var olderLinkTitle = $("a.blog-pager-older-link").text(); 
-$("a.blog-pager-older-link").html(olderLinkTitle + " <i class='fas fa-angle-double-right'></i>");//rgt 
+$("a.blog-pager-older-link").html("<i class='fas fa-angle-double-left'></i> " + olderLinkTitle); 
 }); 
 });
 //]]>
