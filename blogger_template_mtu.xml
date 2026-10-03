@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html b:version='2' class='v2' expr:dir='data:blog.languageDirection' expr:lang='data:blog.locale' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
   <head>
-    <!-- archive 1ページ目リダイレクトのチラつき防止(head最上部で即時判定&#12539;即時遷移) -->
+    <!-- archive 1ページ目リダイレクトのチラつき防止(head最上部で即時判定・即時遷移) -->
     <b:if cond='data:blog.pageType == &quot;archive&quot;'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -963,7 +963,6 @@ a.single-header-category-item:hover, .list-item-category-item a:hover {
 #single-content {
    margin-top: 1em;
    line-height: 1.8;
-	margin-bottom:3rem;
 }
 #single-content p {
    margin-top: 1.8em;
@@ -2960,9 +2959,7 @@ input.gsc-input {
 
       let feedUrl = base + "/feeds/posts/summary";
       if (label != '') feedUrl += '/-/' + encodeURIComponent(label);
-      // updated-max は「その日時より古い記事」を返す(その記事自身は含まない)ため、
-      // 対象ページの1件目ではなく「直前ページの最後の記事」(startIndex 番目)の日時を基準にする
-      feedUrl += (feedUrl.indexOf('?') <= -1 ? '?' : '&') + 'alt=json&orderby=published&start-index=' + startIndex + '&max-results=1';
+      feedUrl += (feedUrl.indexOf('?') <= -1 ? '?' : '&') + 'alt=json&orderby=published&start-index=' + (startIndex + 1) + '&max-results=1';
 
       fetch(feedUrl)
         .then((response) => response.json())
@@ -4482,16 +4479,20 @@ jQuery(document).ready(function($){
   var DEFAULT_IMG = 'https://placehold.jp/80x80.png?text=icon';
   var DEFAULT_COLOR = '#aaaaaa';
 
-  function buildBalloon(dir, char, serif) {
-    var c = CHAT_CHARS[char] || {};
+  // 登録キャラを取得(未登録の char 名は、そのまま表示名として扱う)
+  function resolveChar(key) {
+    var c = CHAT_CHARS[key];
+    return c ? Object.assign({ name: key }, c) : { name: key };
+  }
+
+  function buildBalloon(dir, c, serif) {
     var img    = c.img         || DEFAULT_IMG;
-    var name   = c.name        || char || '';
+    var name   = c.name        || '';
     var color  = c.color       || DEFAULT_COLOR;
     var border = c.borderColor || color;
 
     var iconStyle  = 'border: solid 4px ' + border + ';';
     var serifStyle = 'background:' + color + ';';
-    var arrowStyle = 'border-right-color:' + color + ';';
 
     var iconHtml = '<img src="' + img + '" alt="' + name + '" style="' + iconStyle + '">'
                  + (name ? '<p>' + name + '</p>' : '');
@@ -4509,36 +4510,51 @@ jQuery(document).ready(function($){
     }
   }
 
+  // コード表示用の要素(pre / code / script / style / textarea)は変換対象から除外する
+  var SKIP_BLOCKS = /<(pre|code|script|style|textarea)\b[\s\S]*?<\/\1>/gi;
+
+  function convertShortcodes(html) {
+    // [chat-left char="名前"]セリフ[/chat-left]
+    // [chat-left img="URL" name="名前"]セリフ[/chat-left]  ← 直接指定も可(img / name は省略可)
+    html = html.replace(
+      /\[chat-left(?:\s+char=["']([^"'<>]*)["'])?(?:\s+img=["']([^"'<>]*)["'])?(?:\s+name=["']([^"'<>]*)["'])?\s*\]([\s\S]*?)\[\/chat-left\]/g,
+      function(m, charKey, imgDirect, nameDirect, serif) {
+        if (charKey) return buildBalloon('left', resolveChar(charKey), serif.trim());
+        return buildBalloon('left', { img: imgDirect, name: nameDirect, color: '#da9e5b', borderColor: '#da9e5b' }, serif.trim());
+      }
+    );
+
+    // [chat-right char="名前"]セリフ[/chat-right]
+    html = html.replace(
+      /\[chat-right(?:\s+char=["']([^"'<>]*)["'])?(?:\s+img=["']([^"'<>]*)["'])?(?:\s+name=["']([^"'<>]*)["'])?\s*\]([\s\S]*?)\[\/chat-right\]/g,
+      function(m, charKey, imgDirect, nameDirect, serif) {
+        if (charKey) return buildBalloon('right', resolveChar(charKey), serif.trim());
+        return buildBalloon('right', { img: imgDirect, name: nameDirect, color: '#85e3ff', borderColor: '#85e3ff' }, serif.trim());
+      }
+    );
+    return html;
+  }
+
   function convertBalloons() {
     var bodies = document.querySelectorAll('.post-body, #single-content');
     bodies.forEach(function(body) {
-      var html = body.innerHTML;
+      var original = body.innerHTML;
+      if (original.indexOf('[chat-') === -1) return;
 
-      // [chat-left char="名前"]セリフ[/chat-left]
-      // [chat-left img="URL" name="名前"]セリフ[/chat-left]  ← 直接指定も可
-      html = html.replace(
-        /\[chat-left(?:\s+char=["']([^"'<>]*)["'])?(?:\s+img=["']([^"'<>]*)["'])?(?:\s+name=["']([^"'<>]*)["'])?\]([\s\S]*?)\[\/chat-left\]/g,
-        function(m, charKey, imgDirect, nameDirect, serif) {
-          if (charKey) return buildBalloon('left', charKey, serif.trim());
-          // 直接指定の場合
-          var c = { img: imgDirect, name: nameDirect, color: '#da9e5b', borderColor: '#da9e5b' };
-          CHAT_CHARS['__tmp'] = c;
-          return buildBalloon('left', '__tmp', serif.trim());
-        }
-      );
+      // 1) コード系ブロックを退避
+      var saved = [];
+      var html = original.replace(SKIP_BLOCKS, function(block) {
+        saved.push(block);
+        return '\uE000' + (saved.length - 1) + '\uE001';
+      });
 
-      // [chat-right char="名前"]セリフ[/chat-right]
-      html = html.replace(
-        /\[chat-right(?:\s+char=["']([^"'<>]*)["'])?(?:\s+img=["']([^"'<>]*)["'])?(?:\s+name=["']([^"'<>]*)["'])?\]([\s\S]*?)\[\/chat-right\]/g,
-        function(m, charKey, imgDirect, nameDirect, serif) {
-          if (charKey) return buildBalloon('right', charKey, serif.trim());
-          var c = { img: imgDirect, name: nameDirect, color: '#85e3ff', borderColor: '#85e3ff' };
-          CHAT_CHARS['__tmp'] = c;
-          return buildBalloon('right', '__tmp', serif.trim());
-        }
-      );
+      // 2) ショートコード変換
+      html = convertShortcodes(html);
 
-      body.innerHTML = html;
+      // 3) 退避したブロックを元に戻す
+      html = html.replace(/\uE000(\d+)\uE001/g, function(m, i) { return saved[+i]; });
+
+      if (html !== original) body.innerHTML = html;
     });
   }
 
