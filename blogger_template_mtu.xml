@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html b:version='2' class='v2' expr:dir='data:blog.languageDirection' expr:lang='data:blog.locale' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
   <head>
-    <!-- archive 1ページ目リダイレクトのチラつき防止(head最上部で即時判定・即時遷移) -->
+    <!-- archive 1ページ目リダイレクトのチラつき防止(head最上部で即時判定&#12539;即時遷移) -->
     <b:if cond='data:blog.pageType == &quot;archive&quot;'>
     <script type='text/javascript'>
       //<![CDATA[
@@ -93,7 +93,7 @@
 <b:skin><![CDATA[
 /*-----------------------------------------------------------------------------
 Name:      Blogger Template MTU
-Version:   1.7.0
+Version:   1.7.1
 Release Date : 2026	
 Author:    matsusan
 Copyright: matsusan
@@ -2959,7 +2959,9 @@ input.gsc-input {
 
       let feedUrl = base + "/feeds/posts/summary";
       if (label != '') feedUrl += '/-/' + encodeURIComponent(label);
-      feedUrl += (feedUrl.indexOf('?') <= -1 ? '?' : '&') + 'alt=json&orderby=published&start-index=' + (startIndex + 1) + '&max-results=1';
+      // updated-max は「その日時より古い記事」を返す(その記事自身は含まない)ため、
+      // 対象ページの1件目ではなく「直前ページの最後の記事」(startIndex 番目)の日時を基準にする
+      feedUrl += (feedUrl.indexOf('?') <= -1 ? '?' : '&') + 'alt=json&orderby=published&start-index=' + startIndex + '&max-results=1';
 
       fetch(feedUrl)
         .then((response) => response.json())
