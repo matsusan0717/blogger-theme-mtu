@@ -7,11 +7,10 @@
     <script type='text/javascript'>
       //<![CDATA[
       (function() {
-        var maxResults = 4; // 件数変更 : アーカイブ一覧の件数を設定してください
+        var maxResults = 4;
         var path = location.pathname;
         var search = location.search;
         if (/^\/\d{4}\/(\d{2}\/)?/.test(path) && search.indexOf('max-results=') === -1) {
-          document.documentElement.style.display = 'none';
           var sep = search ? '&' : '?';
           location.replace(path + search + sep + 'max-results=' + maxResults + '&type=archive');
         }
@@ -94,7 +93,7 @@
 <b:skin><![CDATA[
 /*-----------------------------------------------------------------------------
 Name:      Blogger Template MTU
-Version:   1.6.2
+Version:   1.7.0
 Release Date : 2026	
 Author:    matsusan
 Copyright: matsusan
@@ -751,6 +750,11 @@ html {
 .list-item-img {
    display: block;
    width: 100%;
+   height: auto;
+   /* サムネイルを常に16:9で表示（16:9以外は縦横比を維持して中央トリミング） */
+   aspect-ratio: 16 / 9;
+   object-fit: cover;
+   object-position: center;
 }
 .list-item-title {
    margin-top: .5em;
@@ -2740,7 +2744,7 @@ input.gsc-input {
         <b:includable id='nextprev'>
   <b:if cond='data:blog.pageType in {&quot;index&quot;, &quot;label&quot;, &quot;search&quot;, &quot;archive&quot;}'>
     <style>
-      #list .list-item:nth-child(n+5) { display: none; } /* アーカイブ一覧表示件数設定 */
+      #list .list-item:nth-child(n+5) { display: none; }
     </style>
     <script type='text/javascript'>
       if (location.href.indexOf(&#39;updated-max&#39;) !== -1 || location.href.indexOf(&#39;#Page-&#39;) !== -1) {
@@ -2755,7 +2759,7 @@ input.gsc-input {
   const label = &quot;<b:eval expr='data:blog.searchLabel'/>&quot;;
   const query = &quot;<b:eval expr='data:blog.searchQuery'/>&quot;;
   const selector = &#39;.pagination&#39;;
-  const maxResults = 4; // 各一覧ページの表示件数設定
+  const maxResults = 4;
 
   //<![CDATA[
   (function() {
@@ -2777,9 +2781,8 @@ input.gsc-input {
     const isArchive = archivePath !== "" || typeParam === 'archive';
 
     if (archiveMatch && currentSearch.indexOf('max-results=') === -1) {
-      document.documentElement.style.display = 'none';
       const sep = currentSearch ? '&' : '?';
-      location.replace(path + currentSearch + sep + 'max-results=' + maxResults + '&type=archive');
+      location.href = path + currentSearch + sep + 'max-results=' + maxResults + '&type=archive';
       return;
     }
 
@@ -2822,10 +2825,10 @@ input.gsc-input {
 
       let imgHtml;
       if (entry.media$thumbnail && entry.media$thumbnail.url) {
-        const imgSrc = entry.media$thumbnail.url.replace(/\/s\d+(-c)?\//, '/s640/');
-        imgHtml = '<a href="' + url + '"><img class="list-item-img" src="' + imgSrc + '" height="240" width="480"/></a>';
+        const imgSrc = entry.media$thumbnail.url.replace(/\/s\d+(-c)?\//, '/w640-h360-c/');
+        imgHtml = '<a href="' + url + '"><img class="list-item-img" src="' + imgSrc + '" height="270" width="480"/></a>';
       } else {
-        imgHtml = '<a href="' + url + '"><img class="list-item-img" height="240" src="https://placehold.jp/50px/70543e/ffffff/1280x720.jpg?text=NO%20IMAGE&css=%7B%22background%22%3A%22%20-webkit-gradient(linear%2C%20left%20top%2C%20left%20bottom%2C%20from(%23666666)%2C%20to(%23cccccc))%22%7D" width="480"/></a>';
+        imgHtml = '<a href="' + url + '"><img class="list-item-img" height="270" src="https://placehold.jp/50px/70543e/ffffff/1280x720.jpg?text=NO%20IMAGE&css=%7B%22background%22%3A%22%20-webkit-gradient(linear%2C%20left%20top%2C%20left%20bottom%2C%20from(%23666666)%2C%20to(%23cccccc))%22%7D" width="480"/></a>';
       }
 
       let labelsHtml = '';
@@ -3006,11 +3009,11 @@ input.gsc-input {
     </b:if>
     <b:if cond='data:post.firstImageUrl'>
   <a expr:href='data:post.url'>
-    <img class='list-item-img' expr:src='resizeImage(data:post.firstImageUrl, 480, &quot;2:1&quot;)' height='240' width='480'/>
+    <img class='list-item-img' expr:src='resizeImage(data:post.firstImageUrl, 480, &quot;16:9&quot;)' height='270' width='480'/>
   </a>
 <b:else/>
   <a expr:href='data:post.url'>
-    <img class='list-item-img' height='240' src='https://placehold.jp/50px/70543e/ffffff/1280x720.jpg?text=NO%20IMAGE&amp;css=%7B%22background%22%3A%22%20-webkit-gradient(linear%2C%20left%20top%2C%20left%20bottom%2C%20from(%23666666)%2C%20to(%23cccccc))%22%7D' width='480'/>
+    <img class='list-item-img' height='270' src='https://placehold.jp/50px/70543e/ffffff/1280x720.jpg?text=NO%20IMAGE&amp;css=%7B%22background%22%3A%22%20-webkit-gradient(linear%2C%20left%20top%2C%20left%20bottom%2C%20from(%23666666)%2C%20to(%23cccccc))%22%7D' width='480'/>
   </a>
 </b:if>
     <div class='list-item-inner'>
