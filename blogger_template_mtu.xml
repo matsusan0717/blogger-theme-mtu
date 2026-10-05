@@ -2961,8 +2961,6 @@ input.gsc-input {
 
       let feedUrl = base + "/feeds/posts/summary";
       if (label != '') feedUrl += '/-/' + encodeURIComponent(label);
-      // updated-max は「その日時より古い記事」を返す(その記事自身は含まない)ため、
-      // 対象ページの1件目ではなく「直前ページの最後の記事」(startIndex 番目)の日時を基準にする
       feedUrl += (feedUrl.indexOf('?') <= -1 ? '?' : '&') + 'alt=json&orderby=published&start-index=' + startIndex + '&max-results=1';
 
       fetch(feedUrl)
@@ -3551,7 +3549,6 @@ input.gsc-input {
 //<![CDATA[
 (function() {
 
-  /* タブ */
   const btn1 = document.querySelector('.tab-buttons .content1');
   const btn2 = document.querySelector('.tab-buttons .content2');
   const pane1 = document.querySelector('.tab-content .content1');
@@ -3570,7 +3567,6 @@ input.gsc-input {
     lamp.style.left = '50%';
   };
 
-  /* ===== 人気記事（DOMコピー） ===== */
   window.addEventListener('load', function() {
     const origin = document.querySelector('.PopularPosts');
     if (!origin) return;
@@ -3604,7 +3600,6 @@ input.gsc-input {
     origin.style.display = 'none';
   });
 
-  /* ===== 新着記事 ===== */
   window.renderRecentPosts = function(json) {
     const container = document.getElementById('recent-posts-container');
 
@@ -4109,9 +4104,7 @@ input.gsc-input {
 (function() {
   const pageTop = document.getElementById("page-top");
   if (pageTop) {
-    // スクロール検知
     window.addEventListener("scroll", function() {
-      // 200px以上スクロールしたら表示
       if (window.pageYOffset > 200) {
         pageTop.classList.add("show");
       } else {
@@ -4248,9 +4241,7 @@ $("a.blog-pager-older-link").html("<i class='fas fa-angle-double-left'></i> " + 
         var tocPlaceholder = document.getElementById('toc') || document.querySelector('.toc');
 
         if (!rootElement || !tocPlaceholder) { return; }
-
         if (toc_options.target.length == 0) return;
-
         var rootContent = searchHeadLine(toc_options, rootElement);
 
         if (rootContent.children.length >= toc_options.condTargetCount) {
@@ -4482,8 +4473,6 @@ jQuery(document).ready(function($){
 
   var DEFAULT_IMG = 'https://placehold.jp/80x80.png?text=icon';
   var DEFAULT_COLOR = '#aaaaaa';
-
-  // 登録キャラを取得(未登録の char 名は、そのまま表示名として扱う)
   function resolveChar(key) {
     var c = CHAT_CHARS[key];
     return c ? Object.assign({ name: key }, c) : { name: key };
@@ -4514,9 +4503,7 @@ jQuery(document).ready(function($){
     }
   }
 
-  // コード表示用の要素(pre / code / script / style / textarea)は変換対象から除外する
   var SKIP_BLOCKS = /<(pre|code|script|style|textarea)\b[\s\S]*?<\/\1>/gi;
-
   function convertShortcodes(html) {
     // [chat-left char="名前"]セリフ[/chat-left]
     // [chat-left img="URL" name="名前"]セリフ[/chat-left]  ← 直接指定も可(img / name は省略可)
@@ -4544,24 +4531,17 @@ jQuery(document).ready(function($){
     bodies.forEach(function(body) {
       var original = body.innerHTML;
       if (original.indexOf('[chat-') === -1) return;
-
-      // 1) コード系ブロックを退避
       var saved = [];
       var html = original.replace(SKIP_BLOCKS, function(block) {
         saved.push(block);
         return '\uE000' + (saved.length - 1) + '\uE001';
       });
 
-      // 2) ショートコード変換
       html = convertShortcodes(html);
-
-      // 3) 退避したブロックを元に戻す
       html = html.replace(/\uE000(\d+)\uE001/g, function(m, i) { return saved[+i]; });
-
       if (html !== original) body.innerHTML = html;
     });
   }
-
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', convertBalloons);
   } else {
