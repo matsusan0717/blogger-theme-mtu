@@ -3969,14 +3969,14 @@ input.gsc-input {
                                 'position':'absolute',
                                 'top': stopLimit+'px',
                                 'width': originalWidth+'px',
-                                'z-index':'99'
+                                'z-index':'1'
                             });
                         }else{
                             $parentGadget.css({
                                 'position':'fixed',
                                 'top': topPadding+'px',
                                 'width': originalWidth+'px',
-                                'z-index':'99'
+                                'z-index':'1'
                             });
                         }
                     }else{
