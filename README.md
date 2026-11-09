@@ -33,18 +33,6 @@ QooQ をベースにカスタマイズした Blogger 用テンプレートです
 
 ### 2. 必須設定（適用後に変更してください）
 
-#### ブログURL（2箇所）
-
-サイドバーの「人気記事 / 新着記事」ウィジェット内に以下が2箇所あります。 >> 修正不要になりました
-
-```javascript
-const blogUrl = "https://your-blog.blogspot.com";
-```
-
-`your-blog.blogspot.com` をご自身のブログのURLに変更してください。
-
-> Blogger 管理画面 → テーマ → HTMLを編集 → `your-blog.blogspot.com` で検索
-
 #### ファビコン
 
 head 内に以下があります。ご自身のファビコン画像URLに変更してください。
