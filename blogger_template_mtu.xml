@@ -3928,8 +3928,8 @@ input.gsc-input {
 
         var $ul = $('<ul></ul>');
         $headings.each(function(i, el){
-            var id = 'toc-point-' + i;
-            $(el).attr('id', id);
+		var id = el.id || ('toc-point-' + i);
+		$(el).attr('id', id);
             var li = $('<li></li>');
             if(el.tagName === 'H3') li.css('padding-left','15px');
             var a = $('<a href="#'+id+'" class="toc-link">'+$(el).text()+'</a>');
@@ -4256,10 +4256,10 @@ $("a.blog-pager-older-link").html("<i class='fas fa-angle-double-left'></i> " + 
         var fn = function (index, element, parentContent) {
           var currentTarget = toc_options.target[index];
           var nextTarget = index < count - 1 ? toc_options.target[index + 1] : "";
-          var id = "toc_headline_" + (++id_seq);
-          var content = createItem(currentTarget, text(element), index + 1, id);
-          parentContent.children.push(content);
-          element.id = id;
+		  var id = element.id || ("toc_headline_" + (++id_seq));
+		  var content = createItem(currentTarget, text(element), index + 1, id);
+		  parentContent.children.push(content);
+		  element.id = id;
           var el = next(element);
           if (nextTarget == "") { return; }
           var prevTarget = "";
