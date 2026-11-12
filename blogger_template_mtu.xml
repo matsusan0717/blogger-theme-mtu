@@ -4367,22 +4367,16 @@ $("a.blog-pager-older-link").html("<i class='fas fa-angle-double-left'></i> " + 
       }
 
 	function smoothScroll(a) {
-  	a.addEventListener('click', (e) => {
-    	e.preventDefault();
-    	let href = a.getAttribute('href');
-    	let id = href.replace('#', '');
-    	let targetElement = document.getElementById(id)
-      	|| document.querySelector('[id="' + id + '"]');
-    	if (targetElement) {
-      	const headerOffset = 60; 
-      	const rect = targetElement.getBoundingClientRect().top;
-     	 const offset = window.pageYOffset;
-     	 const target = rect + offset - headerOffset;
-     	 window.scrollTo({ top: target, behavior: 'smooth' });
-    	} else {
-      	location.href = href;
-    	}
-    });
+	  a.addEventListener('click', function(e) {
+	    e.preventDefault();
+	    var id = a.getAttribute('href').replace('#', '');
+	    var targetElement = document.getElementById(id);
+	    if (targetElement) {
+	      var headerOffset = 60;
+	      var top = targetElement.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+	      window.scrollTo({ top: top, behavior: 'smooth' });
+	    }
+	  });
 	}
 
       function createItem(tagName, text, nestLevel, id) {
